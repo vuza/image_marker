@@ -1,1 +1,1 @@
-<img src="/images/landscape.jpg">
+<button id="load">Load</button>
