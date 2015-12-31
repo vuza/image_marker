@@ -2,7 +2,12 @@
 Web application to mark objects on images.
 
 ## development
+
+### Git flow
 This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
+
+### Semver
+The webapp (client and frontend) is using Semantic Versioning (http://semver.org/), be sure to update version in package.json correctly.
 
 ## deployment
 App can be deployed through ansible, run:
