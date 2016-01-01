@@ -2,20 +2,11 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
+        onRender: function(){ this.createSvg(); return this},
+
         attributes: function () {
             return {
                 'id': 'markerView'
-            }
-        },
-
-        ui: {
-            loadButton: '#load'
-        },
-
-        events: {
-            'click @ui.loadButton': function(){
-                $('#markerView').html('');
-                this.createSvg();
             }
         },
 
@@ -29,15 +20,13 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView
                 .range([500,0]);
 
             // create the svg
-            var margin = {top: 20, right: 20, bottom: 30, left: 40},
-                width = 960 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
+            var width = 960,
+                height = 500;
 
-            var svg = d3.select("#markerView").append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            var svg = d3.select(this.el).append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g");
 
             // add the image
             var defs = svg.append("defs");

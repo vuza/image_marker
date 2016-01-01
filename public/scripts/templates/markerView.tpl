@@ -1,1 +1,0 @@
-<button id="load">Load</button>
