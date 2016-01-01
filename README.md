@@ -2,7 +2,7 @@
 Web application to mark objects on images.
 
 # image_marker backend
-------to build the program:-------
+##How to build the program
 Ihr benötigt auf jeden Fall die üblichen Develop-Sachen:
 
 - C++ (apt-get install build-essential)
@@ -24,10 +24,10 @@ cmake ..
 make
 
 
-------to start the program------
+## How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
 
 
-## development
+# development
 This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
