@@ -14,6 +14,7 @@ und
 - Boost (sudo apt-get install libboost-all-dev)
 - Eigen3 (sudo apt-get install libeigen3-dev)
 - OpenCV 2.x (http://opencv.org/): Ich verwende die src-Version. Es sollte aber auch das Ubuntu-Package funktionieren.
+(install instructions: http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html)
 
 Dann:
 

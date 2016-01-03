@@ -1,7 +1,7 @@
 
   cmake_minimum_required ( VERSION 2.6 )
 
-  SET(OpenCV_DIR "/home/andreas/opencv-2.4.9/build")
+  #SET(OpenCV_DIR "/home/andreas/opencv-2.4.9/build")
 
   PROJECT(ImageLabelling)
 
