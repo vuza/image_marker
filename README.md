@@ -1,7 +1,7 @@
 # image_marker frontend
 Web application to mark objects on images.
 
-# image_marker backend
+# image_marker c++
 ##How to build the program
 Ihr benötigt auf jeden Fall die üblichen Develop-Sachen:
 
@@ -29,6 +29,32 @@ make
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
 
+## c++ api (not implemented)
+```c++
+/**
+ * returns the path of the next image
+ */
+String nextImgPath getNextImg(String actualImgName) 
 
+/**
+ * returns the path of the previous image
+ */
+String prevImgPath getPrevImg(String actualImgName)
+
+/**
+ * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
+ */
+Matrix imgMatrix getImageMatrix(String imgName)
+
+/**
+ * fills the segment around the x and y coordinate with the given label
+ */
+Matrix imgMatrix fillSegment(String imgName, Matrix imgMatrix, int x, int y, int label) 
+
+/**
+ * fills all unlabeledSegments with the given label
+ */
+Matrix imgMatrix fillAllUnlabeledSegments(String imgName, Matrix imgMatrix, int label)
+```
 # development
 This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
