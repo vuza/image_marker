@@ -13,7 +13,8 @@ image_processor
 |
 ├---im_processor // Node.js/C++ image processing module
 |   ├---build
-|   ├---src
+|   └---src
+|       └----lib // stores original C++ image processing program!
 |
 └---public // Marionette.js frontend is stored here
     ├---css
