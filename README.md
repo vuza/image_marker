@@ -1,5 +1,25 @@
 # image_marker
-Web application to mark objects on images.
+
+Web application to mark objects on images. This repo includes C++ Code for image processing, Node.js server and Marionette.js web client.
+
+image_processor
+|   README.md
+|   ...
+|   package.json // holds all information to install, test and run Node.js server
+|
+├---deployment // ansible deployment scripts are stored here
+|   |   playbook.yml
+|
+├---im_processor // Node.js/C++ image processing module
+|   ├---build
+|   ├---src
+|
+└---public // Marionette.js frontend is stored here
+    ├---css
+    ├---images
+    ├---scripts
+    |   index.html
+
 
 ## development
 
@@ -17,7 +37,11 @@ ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
 You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at# image_marker backend
 
-## How to build the program
+## C++ image processor
+
+Can be found at ./im_processor/src/lib/*
+
+### How to build the program
 Ihr benötigt auf jeden Fall die üblichen Develop-Sachen:
 
 - C++ (apt-get install build-essential)
@@ -40,6 +64,6 @@ cmake ..
 make
 
 
-## How to start the program
+### How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
