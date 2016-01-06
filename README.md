@@ -2,6 +2,7 @@
 
 Web application to mark objects on images. This repo includes C++ Code for image processing, Node.js server and Marionette.js web client.
 
+```
 image_processor
 |   README.md
 |   ...
@@ -19,7 +20,7 @@ image_processor
     ├---images
     ├---scripts
     |   index.html
-
+```
 
 ## development
 
