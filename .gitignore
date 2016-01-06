@@ -1,7 +1,7 @@
 /node_modules/
 /.idea
 
-/c++/build/
-/c++/.idea
+/im_processor/src/build/
+/im_processor/src/.idea
 
 *~
