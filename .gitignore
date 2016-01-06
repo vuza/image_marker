@@ -1,5 +1,5 @@
 /node_modules/
-/.idea
+.idea
 
 /im_processor/src/build/
 /im_processor/src/.idea
