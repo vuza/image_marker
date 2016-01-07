@@ -7,7 +7,8 @@ require.config({
         underscore: 'vendor/underscore/underscore',
         Marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
         tpl: 'vendor/underscore-tpl/underscore-tpl',
-        text: 'vendor/text/text'
+        text: 'vendor/text/text',
+        randomcolor: 'vendor/randomcolor/randomColor'
     },
     shim: {
         underscore: {

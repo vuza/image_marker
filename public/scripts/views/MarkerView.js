@@ -1,8 +1,15 @@
-define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView, Marionette, d3) {
+define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], function(markerView, Marionette, d3, randomColor) {
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
-        onRender: function(){ this.createSvg(); return this},
+        initialize: function(opt){
+            if(opt){
+                if(opt.image) MarkerView.image = opt.image;
+                if(opt.matrix) MarkerView.matrix = opt.matrix;
+            }
+        },
+
+        onRender: function(){this.createSvg(); return this},
 
         attributes: function () {
             return {
@@ -11,18 +18,10 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView
         },
 
         createSvg: function(){
-            var scaleX = d3.scale.linear()
-                .domain([-30,30])
-                .range([0,600]);
-
-            var scaleY = d3.scale.linear()
-                .domain([0,50])
-                .range([500,0]);
-
-            // create the svg
             var width = 960,
                 height = 500;
 
+            // create the svg
             var svg = d3.select(this.el).append("svg")
                 .attr("width", width)
                 .attr("height", height)
@@ -36,8 +35,8 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView
                 .attr('patternUnits', 'userSpaceOnUse')
                 .attr('width', width)
                 .attr('height', height)
-                .append("image")
-                .attr("xlink:href", "/images/landscape.jpg")
+                .append('image')
+                .attr('xlink:href', MarkerView.image)
                 .attr('width', width)
                 .attr('height', height);
 
@@ -48,20 +47,17 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView
                 .attr('height', height)
                 .attr('fill', 'url(#image)');
 
-            // first test polygon
-            var points = [{"x":0.0, "y":25.0},
-                {"x":8.5,"y":23.4},
-                {"x":13.0,"y":21.0},
-                {"x":19.0,"y":15.5}];
-
-            svg.append("polygon")
-                .attr("stroke","black")
-                .attr("stroke-width",2)
-                .attr("points",function(d) {
-                    return points.map(function(d) {
-                        return [scaleX(d.x), scaleY(d.y)].join(",");
-                    }).join(" ");
-                });
+            svg.selectAll('.dot')
+                .data(MarkerView.matrix)
+                .enter().append('circle')
+                .attr('class', 'dot')
+                .attr('r', 1)
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; })
+                .style('fill', function(){ return randomColor({
+                    format: 'hex'
+                }); })
+                .attr('fill-opacity', function(){ return Math.random() * (1 - 0.2) + 0.2; });
         }
     });
 
