@@ -9,7 +9,4 @@ server.use(function (req, res, next) {
     next();
 });
 
-var mylib = require("./im_processor/build/Release/im_processor");
-console.log(mylib.hello());
-
 server.listen(3991);
