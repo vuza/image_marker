@@ -1,5 +1,4 @@
-var express = require('express');
-var im_processor = require('./im_processor/build/Release/im_processor.node')
+var express = require('express'),
     server = express();
 
 
@@ -10,12 +9,9 @@ server.use(function (req, res, next) {
     next();
 });
 
-server.get('/', function (req, res) {
-    console.log("Incoming request at / ");
-    console.log(im_processor.getNextImg());
-    res.send('Hello World!');
+var im_processor = require('./im_processor/build/Release/im_processor');
+im_processor.test(function(r){
+    console.log(r);
 });
 
-server.listen(3991, function() {
-    console.log("Server listening on port 3991!");
-});
+server.listen(3991);

@@ -1,4 +1,12 @@
 #include <node.h>
+#include <string>
+#include <iostream>
+#include <unistd.h>
+#include <v8.h>
+#include <vector>
+#include <uv.h>
+
+using namespace v8;
 
 namespace demo {
 
@@ -11,51 +19,60 @@ using v8::Object;
 using v8::String;
 using v8::Value;
 
-    void getNextImg(const FunctionCallbackInfo<Value>& args){
-        Isolate* isolate = args.GetIsolate();
-        //TODO String nextImgPath getNextImg(String actualImgName)
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "getNextImg not implemented."));
+    struct Work {
+        uv_work_t  request;
+        Persistent<Function> callback;
+    };
+
+    static void WorkAsync(uv_work_t *req)
+    {
+        Work *work = static_cast<Work *>(req->data);
+
+        // this is the worker thread, lets build up the results
+        // allocated results from the heap because we'll need
+        // to access in the event loop later to send back
     }
 
-    void getPrevImg(const FunctionCallbackInfo<Value>& args){
-        Isolate* isolate = args.GetIsolate();
-        //TODO String prevImgPath getPrevImg(String actualImgName)
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "getPrevImg not implemented."));
-    }
+    // called by libuv in event loop when async function completes
+    static void WorkAsyncComplete(uv_work_t *req, int status)
+    {
+        Isolate * isolate = Isolate::GetCurrent();
+        v8::HandleScope handleScope(isolate); // Required for Node 4.x
 
-    void getImageMatrix(const FunctionCallbackInfo<Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        Local<Function> cb = Local<Function>::Cast(args[0]);
+        Work *work = static_cast<Work *>(req->data);
+
+        // the work has been done, and now we pack the results
+        // vector into a Local array on the event-thread's stack.
+
         const unsigned argc = 1;
-        //TODO Matrix imgMatrix getImageMatrix(String imgName)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "getImageMatrix not implemented.") };
-        cb->Call(Null(isolate), argc, argv);
+        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "callback results") };
+        Local<Function>::New(isolate, work->callback)->Call(Null(isolate), argc, argv);
+
+        // Free up the persistent function callback
+        work->callback.Reset();
+
+        delete work;
     }
 
-    void fillSegment(const FunctionCallbackInfo<Value>& args) {
+    void test(const FunctionCallbackInfo<Value>& args) {
         Isolate* isolate = args.GetIsolate();
-        Local<Function> cb = Local<Function>::Cast(args[0]);
-        const unsigned argc = 1;
-        //TODO Matrix imgMatrix fillSegment(String imgName, Matrix imgMatrix, int x, int y, int label)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "fillSegment not implemented.") };
-        cb->Call(Null(isolate), argc, argv);
-    }
 
-    void fillAllUnlabeledSegments(const FunctionCallbackInfo<Value>& args) {
-        Isolate* isolate = args.GetIsolate();
+        Work * work = new Work();
+        work->request.data = work;
+
+        // store the callback from JS in the work package so we can
+        // invoke it later
         Local<Function> cb = Local<Function>::Cast(args[0]);
-        const unsigned argc = 1;
-        //TODO Matrix imgMatrix fillAllUnlabeledSegments(String imgName, Matrix imgMatrix, int label)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "fillAllUnlabeledSegments not implemented.") };
-        cb->Call(Null(isolate), argc, argv);
+        work->callback.Reset(isolate, cb);
+
+        // kick of the worker thread
+        uv_queue_work(uv_default_loop(), &work->request, WorkAsync, WorkAsyncComplete);
+
+        args.GetReturnValue().Set(Undefined(isolate));
     }
 
     void Init(Local<Object> exports, Local<Object> module) {
-        NODE_SET_METHOD(exports, "getNextImg", getNextImg);
-        NODE_SET_METHOD(exports, "getPrevImg", getPrevImg);
-        NODE_SET_METHOD(exports, "getImageMatrix", getImageMatrix);
-        NODE_SET_METHOD(exports, "fillSegment", fillSegment);
-        NODE_SET_METHOD(exports, "fillAllUnlabeledSegments", fillAllUnlabeledSegments);
+        NODE_SET_METHOD(exports, "test", test);
     }
 
     NODE_MODULE(im_processor, Init)
