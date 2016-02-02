@@ -36,8 +36,8 @@
           lib/RecursiveSuperpixelClustering.cc
           lib/Slic.cpp
           lib/im_processor_api.cpp
-          im_processor.cc)
+          lib/main_test_im_processor_api.cpp)
 
-  SET(BINARY_NAME labelImageSoilCover)
-  add_executable(${BINARY_NAME} ${SOURCE_H} ${SOURCE_CPP} lib/labelImageSoilCover.cpp)
+  SET(BINARY_NAME main_test_im_processor_api)
+  add_executable(${BINARY_NAME} ${SOURCE_H} ${SOURCE_CPP} lib/main_test_im_processor_api.cpp)
   target_link_libraries(${BINARY_NAME} ${OpenCV_LIBS} ${Boost_LIBRARIES} )

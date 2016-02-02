@@ -132,6 +132,32 @@ const cv::Vec3b &getCol(int idx)
   return it->second;
 }
 
+const int getLabel(int greyColor)
+{
+  if(0 <= greyColor  && greyColor <= 31)
+    return 0;
+
+  if(32 <= greyColor && greyColor <= 63)
+    return 1;
+
+  if(64 <= greyColor && greyColor <= 95)
+    return 2;
+
+  if(96 <= greyColor && greyColor <= 127)
+    return 3;
+
+  if(128 <= greyColor && greyColor <= 159)
+    return 4;
+
+  if(160 <= greyColor && greyColor <= 191)
+    return 5;
+
+  if(192 <= greyColor && greyColor <= 223)
+    return 6;
+
+  if(224 <= greyColor && greyColor <= 255)
+    return 7;
+}
 
 }
 

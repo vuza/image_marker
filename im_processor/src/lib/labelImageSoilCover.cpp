@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
     key = cv::waitKey(0);
 
-    if ( ((char)key)==27)
+    if ( ((char)key)==27) //ESC
     {
       cv::imwrite(directory+label_files[i], im_labels);
       break;
