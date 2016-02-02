@@ -14,13 +14,13 @@ using v8::Value;
     void getNextImg(const FunctionCallbackInfo<Value>& args){
         Isolate* isolate = args.GetIsolate();
         //TODO String nextImgPath getNextImg(String actualImgName)
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "todo"));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "getNextImg not implemented."));
     }
 
     void getPrevImg(const FunctionCallbackInfo<Value>& args){
         Isolate* isolate = args.GetIsolate();
         //TODO String prevImgPath getPrevImg(String actualImgName)
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, ""));
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, "getPrevImg not implemented."));
     }
 
     void getImageMatrix(const FunctionCallbackInfo<Value>& args) {
@@ -28,7 +28,7 @@ using v8::Value;
         Local<Function> cb = Local<Function>::Cast(args[0]);
         const unsigned argc = 1;
         //TODO Matrix imgMatrix getImageMatrix(String imgName)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "hello world") };
+        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "getImageMatrix not implemented.") };
         cb->Call(Null(isolate), argc, argv);
     }
 
@@ -37,7 +37,7 @@ using v8::Value;
         Local<Function> cb = Local<Function>::Cast(args[0]);
         const unsigned argc = 1;
         //TODO Matrix imgMatrix fillSegment(String imgName, Matrix imgMatrix, int x, int y, int label)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "hello world") };
+        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "fillSegment not implemented.") };
         cb->Call(Null(isolate), argc, argv);
     }
 
@@ -46,7 +46,7 @@ using v8::Value;
         Local<Function> cb = Local<Function>::Cast(args[0]);
         const unsigned argc = 1;
         //TODO Matrix imgMatrix fillAllUnlabeledSegments(String imgName, Matrix imgMatrix, int label)
-        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "hello world") };
+        Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "fillAllUnlabeledSegments not implemented.") };
         cb->Call(Null(isolate), argc, argv);
     }
 

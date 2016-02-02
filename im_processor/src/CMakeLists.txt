@@ -1,4 +1,4 @@
-
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   cmake_minimum_required ( VERSION 2.6 )
 
   #SET(OpenCV_DIR "/home/andreas/opencv-2.4.9/build")
@@ -18,24 +18,26 @@
 
 
   set(SOURCE_H
-    DataContainer.hh
-    RecursiveSuperpixelClustering.hh
-    Slic.h
-    toString.hpp
-    ColorMap.hpp
-    DataMatrix2D.hpp
-    FilesystemUtils.hh
-    RecursiveSuperpixelClustering.cc
-    SmartPtr.hpp
-    Vector.hpp
+          lib/DataContainer.hh
+          lib/RecursiveSuperpixelClustering.hh
+          lib/Slic.h
+          lib/toString.hpp
+          lib/ColorMap.hpp
+          lib/DataMatrix2D.hpp
+          lib/FilesystemUtils.hh
+          lib/RecursiveSuperpixelClustering.cc
+          lib/SmartPtr.hpp
+          lib/Vector.hpp
+          lib/im_processor_api.h
   )
 
   set(SOURCE_CPP
-    FilesystemUtils.cc
-    RecursiveSuperpixelClustering.cc
-    Slic.cpp
-  )
+          lib/FilesystemUtils.cc
+          lib/RecursiveSuperpixelClustering.cc
+          lib/Slic.cpp
+          lib/im_processor_api.cpp
+          im_processor.cc)
 
   SET(BINARY_NAME labelImageSoilCover)
-  add_executable(${BINARY_NAME} ${SOURCE_H} ${SOURCE_CPP} labelImageSoilCover.cpp)
+  add_executable(${BINARY_NAME} ${SOURCE_H} ${SOURCE_CPP} lib/labelImageSoilCover.cpp)
   target_link_libraries(${BINARY_NAME} ${OpenCV_LIBS} ${Boost_LIBRARIES} )
