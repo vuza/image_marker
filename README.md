@@ -43,3 +43,13 @@ make
 ## How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
+
+## How to build node module
+- you have to install node-gyp globally
+npm install -g node-gyp
+
+goto /im_processor
+node-gyp configure
+node-gyp build
+
+you can find the built module in /im_processor/build/Release/
