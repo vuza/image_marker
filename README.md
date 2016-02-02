@@ -39,6 +39,9 @@ ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
 You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
 
+# development
+This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
+
 ## C++ image processor
 
 Can be found at ./im_processor/src/lib/*
@@ -69,3 +72,21 @@ make
 ### How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
+
+### api (not implemented)
+```c++
+/**
+ * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
+ */
+Matrix imgMatrix getImageMatrix(String imgName)
+
+/**
+ * fills the segment around the x and y coordinate with the given label
+ */
+Matrix imgMatrix fillSegment(String imgName, Matrix imgMatrix, int x, int y, int label) 
+
+/**
+ * fills all unlabeledSegments with the given label
+ */
+Matrix imgMatrix fillAllUnlabeledSegments(String imgName, Matrix imgMatrix, int label)
+```
