@@ -76,16 +76,6 @@ make
 ### api (not implemented)
 ```c++
 /**
- * returns the path of the next image
- */
-String nextImgPath getNextImg(String actualImgName) 
-
-/**
- * returns the path of the previous image
- */
-String prevImgPath getPrevImg(String actualImgName)
-
-/**
  * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
  */
 Matrix imgMatrix getImageMatrix(String imgName)
