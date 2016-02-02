@@ -2,11 +2,9 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
-        initialize: function(opt){
-            if(opt){
-                if(opt.image) MarkerView.image = opt.image;
-                if(opt.matrix) MarkerView.matrix = opt.matrix;
-            }
+        initialize: function(image){
+            this.image = image;
+            console.log(image.attributes);
         },
 
         onRender: function(){this.createSvg(); return this},
@@ -18,13 +16,10 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
         },
 
         createSvg: function(){
-            var width = 960,
-                height = 500;
-
             // create the svg
             var svg = d3.select(this.el).append("svg")
-                .attr("width", width)
-                .attr("height", height)
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
                 .append("g");
 
             // add the image
@@ -33,22 +28,22 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
             defs.append('pattern')
                 .attr('id', 'image')
                 .attr('patternUnits', 'userSpaceOnUse')
-                .attr('width', width)
-                .attr('height', height)
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
                 .append('image')
-                .attr('xlink:href', MarkerView.image)
-                .attr('width', width)
-                .attr('height', height);
+                .attr('xlink:href', '/images/' + this.image.get('name'))
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'));
 
             svg.append('rect')
                 .attr('x', 0)
                 .attr('y', 0)
-                .attr('width', width)
-                .attr('height', height)
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
                 .attr('fill', 'url(#image)');
 
             svg.selectAll('.dot')
-                .data(MarkerView.matrix)
+                .data(this.image.get('matrix'))
                 .enter().append('circle')
                 .attr('class', 'dot')
                 .attr('r', 1)

@@ -1,18 +1,19 @@
-define(['Marionette', 'views/MarkerView'], function(Marionette, MarkerView){
+define(['Marionette', 'views/MarkerView', 'models/Image', 'async'], function(Marionette, MarkerView, Image, async){
     var MarkerController = Marionette.Object.extend({
         initialize: function(app){
-            var opt = {};
-            //TODO get data
-            opt.image = '/images/landscape.jpg';
-            opt.matrix = [];
-            for(var i = 0; i < 960; i++){
-                for(var y = 0; y < 500; y++){
-                    opt.matrix.push({x: i, y: y});
+            var image = new Image({name: 'image1.jpg'});
+
+            async.waterfall([
+                function(cb){
+                    image.fetch({ success: function(image){
+                        cb(null, image);
+                    }});
+                },
+                function(image, cb){
+                    app.mainRegion.show(new MarkerView(image));
+                    cb();
                 }
-            }
-            
-            var markerView = new MarkerView(opt);
-            app.mainRegion.show(markerView);
+            ]);
         }
     });
 
