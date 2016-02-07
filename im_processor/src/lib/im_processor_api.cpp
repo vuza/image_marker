@@ -37,7 +37,6 @@ void Im_processor_api::initLabelNames()
 void Im_processor_api::loadImage(string imgName)
 {
     string pathToImage = image_directory + imgName;
-    std::cout << pathToImage << std::endl;
     image = cv::imread(image_directory + imgName, CV_LOAD_IMAGE_COLOR);
 
     string labelName = "label_" + imgName.substr(0, imgName.length() - image_ext.length()) + label_ext;

@@ -11,7 +11,7 @@ server.use(function (req, res, next) {
 
 try{
     var im_processor = require('./im_processor/build/Release/addon');
-    im_processor.test('/image.1.jpg', function(err, res){
+    im_processor.fillSegment("imageName", "imgMatrix", 1, 2, 3, function(err, res){
         console.log('result: ');
         console.log(res);
     });

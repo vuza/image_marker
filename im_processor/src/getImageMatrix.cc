@@ -14,14 +14,14 @@ using Nan::New;
 using Nan::Null;
 using Nan::To;
 
-class Worker : public AsyncWorker {
+class GetImageMatrixWorker : public AsyncWorker {
  public:
-  Worker(Callback *callback, std::string path)
+  GetImageMatrixWorker(Callback *callback, std::string path)
     : AsyncWorker(callback), path(path), matrix("") {
         im_processor_api = new Im_processor_api();
     }
 
-  ~Worker() {}
+  ~GetImageMatrixWorker() {}
 
   void Execute () {
     matrix = im_processor_api->getImageMatrix(path);
@@ -50,5 +50,5 @@ NAN_METHOD(GetImageMatrix) {
 
   Callback *callback = new Callback(info[1].As<Function>());
 
-  AsyncQueueWorker(new Worker(callback, path));
+  AsyncQueueWorker(new GetImageMatrixWorker(callback, path));
 }
