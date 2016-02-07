@@ -9,17 +9,9 @@ server.use(function (req, res, next) {
     next();
 });
 
-try{
-    var im_processor = require('./im_processor/build/Release/addon');
-    im_processor.fillSegment("imageName", "imgMatrix", 1, 2, 3, function(err, res){
-        console.log('result: ');
-        console.log(res);
-    });
-} catch(e){
-    console.log(e);
-}
-
+var im_processor = require('./im_processor/build/Release/addon');
+im_processor.fillAllUnlabeledSegments("imageName", "imgMatrix", 3, function(err, res){
+    console.log(res);
+});
 
 server.listen(3991);
-
-//https://github.com/cmake-js/cmake-js/wiki/TUTORIAL-01-Creating-a-native-module-by-using-CMake.js-and-NAN
