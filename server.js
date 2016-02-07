@@ -9,9 +9,17 @@ server.use(function (req, res, next) {
     next();
 });
 
-var im_processor = require('./im_processor/build/Release/im_processor');
-im_processor.test(function(r){
-    console.log(r);
-});
+try{
+    var im_processor = require('./im_processor/build/Release/addon');
+    im_processor.test('/image.1.jpg', function(err, res){
+        console.log('result: ');
+        console.log(res);
+    });
+} catch(e){
+    console.log(e);
+}
+
 
 server.listen(3991);
+
+//https://github.com/cmake-js/cmake-js/wiki/TUTORIAL-01-Creating-a-native-module-by-using-CMake.js-and-NAN

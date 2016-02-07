@@ -2,10 +2,7 @@
 // Created by andreas on 09.01.16.
 //
 
-#include <opencv2/highgui/highgui_c.h>
 #include "im_processor_api.h"
-#include "FilesystemUtils.hh"
-#include "ColorMap.hpp"
 
 /**
  * empty constructor
@@ -40,6 +37,7 @@ void Im_processor_api::initLabelNames()
 void Im_processor_api::loadImage(string imgName)
 {
     string pathToImage = image_directory + imgName;
+    std::cout << pathToImage << std::endl;
     image = cv::imread(image_directory + imgName, CV_LOAD_IMAGE_COLOR);
 
     string labelName = "label_" + imgName.substr(0, imgName.length() - image_ext.length()) + label_ext;
@@ -93,7 +91,6 @@ std::string Im_processor_api::getImageMatrix(std::string imgName)
             result = result.substr(0, result.length()-1); //remove last ","
         result += string("}");
     result += string("}");
-    //std::cout << label_test << std::endl;
 
     return result;
 }
