@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
 # Name of the project (will be the name of the plugin)
-project (addon)
+project (im_processor)
 
 # OpenCV
 FIND_PACKAGE (OpenCV)
