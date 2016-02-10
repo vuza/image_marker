@@ -1,40 +1,9 @@
-/*
- * Software License Agreement (GNU General Public License)
- *
- *  Copyright (c) 2014, Johann Prankl, prankl@acin.tuwien.ac.at
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @author Johann Prankl
- *
- */
-
-/**
- * $Id$
- */
-
-#ifndef JVIS_COLOR_MAP_HPP
-#define JVIS_COLOR_MAP_HPP
-
-#include <map>
-#include <opencv2/core/core.hpp>
+#include "ColorMap.hpp"
 
 namespace jvis
 {
 
 std::map<int, cv::Vec3b> col_map;
-
 
 void initColorMap()
 {
@@ -122,7 +91,7 @@ const cv::Vec3b &getCol(int idx)
 
   it = col_map.find(idx);
 
-  if (it==col_map.end()) 
+  if (it==col_map.end())
   {
     std::pair< std::map<int,cv::Vec3b>::iterator, bool > it2;
     it2 = col_map.insert(std::make_pair(idx,cv::Vec3b(rand()%255,rand()%255,rand()%255)) );
@@ -132,7 +101,31 @@ const cv::Vec3b &getCol(int idx)
   return it->second;
 }
 
+const int getLabel(int greyColor)
+{
+  if(0 <= greyColor  && greyColor <= 31)
+    return 0;
 
+  if(32 <= greyColor && greyColor <= 63)
+    return 1;
+
+  if(64 <= greyColor && greyColor <= 95)
+    return 2;
+
+  if(96 <= greyColor && greyColor <= 127)
+    return 3;
+
+  if(128 <= greyColor && greyColor <= 159)
+    return 4;
+
+  if(160 <= greyColor && greyColor <= 191)
+    return 5;
+
+  if(192 <= greyColor && greyColor <= 223)
+    return 6;
+
+  if(224 <= greyColor && greyColor <= 255)
+    return 7;
 }
 
-#endif
+}

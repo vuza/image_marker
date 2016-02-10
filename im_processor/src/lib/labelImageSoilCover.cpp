@@ -17,18 +17,23 @@
 #include "Slic.h"
 #include "RecursiveSuperpixelClustering.hh"
 
+#include <string>
+
 
 using namespace std;
 
 namespace po = boost::program_options;
 
-std::string label_name("labels");
-std::string label_ext("png");
-std::string image_name( "image");
-std::string image_ext("jpg");
+string label_name("labels");
+string label_ext("png");
+string image_name("image");
+string image_ext("jpg");
 
+boost::regex image_path_regex{image_name + "\\.*\\." + image_ext};
 std::string directory;
 
+std::vector<std::string> label_files;
+std::vector<std::string> image_files;
 
 //int k = 5000;    //Desired number of superpixels.
 int superpixelsize = 100;
@@ -90,7 +95,6 @@ void initLabelNames()
   label_names.push_back("Undefined");
   last_label = label_names.size()-1;
 }
-
 
 /**
  * main
@@ -190,7 +194,7 @@ int main(int argc, char *argv[])
 
     key = cv::waitKey(0);
 
-    if ( ((char)key)==27)
+    if ( ((char)key)==27) //ESC
     {
       cv::imwrite(directory+label_files[i], im_labels);
       break;
@@ -505,6 +509,7 @@ void drawLabels(cv::Mat_<cv::Vec3b> &im, const cv::Mat_<unsigned char> &labels, 
     }
   }
 }
+
 
 
 
