@@ -4,7 +4,6 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
 
         initialize: function(image){
             this.image = image;
-            console.log(image.attributes);
         },
 
         onRender: function(){this.createSvg(); return this},

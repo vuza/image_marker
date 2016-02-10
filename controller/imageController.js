@@ -16,6 +16,8 @@ module.exports = {
             return true;
         });
 
+        //TODO lock image ?
+
         if(file)
             res.status(200).send({err: null, result: file});
         else

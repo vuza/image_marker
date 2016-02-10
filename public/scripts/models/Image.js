@@ -15,7 +15,7 @@ define(['models/Model'], function(Model){
         },
 
         err: function(err){
-            console.log('oh whe got an error, see: ' + JSON.stringify(err)); //TODO implement proper error handling
+            console.log('oh we got an error, see: ' + JSON.stringify(err)); //TODO implement proper error handling
         }
     });
 
