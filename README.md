@@ -32,22 +32,11 @@ This repo uses (at least is trying to) git flow, stick to the rules: http://nvie
 ### Semver
 The webapp (client and frontend) is using Semantic Versioning (http://semver.org/), be sure to update version in package.json correctly.
 
-## deployment
-App can be deployed through ansible, run:
-```
-ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
-```
-You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
-The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
-
-# development
-This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
-
-## C++ image processor
+### C++ image processor
 
 Can be found at ./im_processor/src/lib/*
 
-### How to build the program
+#### How to build the program
 Install stuff ...
 
 - C++ (apt-get install build-essential)
@@ -69,10 +58,19 @@ Install stuff ...
 - cmake ..
 - make
 
-### How to start the program
+#### How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
 
-## How to build node module
+### im_processor c++ native node module
+#### How to build node module
 - goto im_processor
 - type npm install
+
+## deployment
+App can be deployed through ansible, run:
+```
+ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
+```
+You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
+The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
