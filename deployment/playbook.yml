@@ -8,3 +8,6 @@
 
   - name: checkout repo
     git: repo=git@github.com:vuza/image_marker.git dest=/var/node/image_marker force=yes accept_hostkey=True version=develop
+
+  - name: install frontend/bower dependencies
+    bower: path=/var/node/image_marker
