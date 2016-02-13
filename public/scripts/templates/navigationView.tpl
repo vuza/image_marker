@@ -1,0 +1,1 @@
+<button id="nextImage">Next image <i class="fa fa-arrow-right"></i></button>
