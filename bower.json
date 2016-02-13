@@ -1,0 +1,31 @@
+{
+  "name": "image_marker",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Marlon Alagoda"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/vuza/image_marker",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/scripts/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "async": "~1.5.2",
+    "backbone.marionette": "marionette#~2.4.4",
+    "backbone.radio": "~1.0.2",
+    "backbone": "~1.2.3",
+    "d3": "~3.5.12",
+    "jquery": "~2.1.4",
+    "lodash": "~2.4.1",
+    "randomcolor": "~0.4.2",
+    "requirejs": "~2.1.22",
+    "socket.io-client": "~1.4.5"
+  }
+}

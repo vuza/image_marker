@@ -1,7 +1,7 @@
 {
   "name": "randomcolor",
   "homepage": "http://llllll.li/randomColor/",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/davidmerfield/randomColor.git"
@@ -24,14 +24,13 @@
     "!LICENSE",
     "!README.md"
   ],
-  "_release": "0.4.2",
+  "_release": "0.4.4",
   "_resolution": {
     "type": "version",
-    "tag": "0.4.2",
-    "commit": "9759c8d4a4469eb08d76925ce9e475fb89fba098"
+    "tag": "0.4.4",
+    "commit": "48d239f00fd365a9c4971df84f6c9b5456356f83"
   },
   "_source": "git://github.com/davidmerfield/randomColor.git",
   "_target": "~0.4.2",
-  "_originalSource": "randomcolor",
-  "_direct": true
+  "_originalSource": "randomcolor"
 }
