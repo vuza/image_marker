@@ -9,26 +9,8 @@ require.config({
         tpl: 'vendor/underscore-tpl/underscore-tpl',
         text: 'vendor/text/text',
         randomcolor: 'vendor/randomcolor/randomColor',
-        async: 'vendor/async/lib/async'
-    },
-    shim: {
-        underscore: {
-            exports: '_'
-        },
-        d3: {
-            deps: ['jquery']
-        },
-        backbone: {
-            deps: ['jquery', 'underscore'],
-            exports: 'Backbone'
-        },
-        jquery: {
-            exports: '$'
-        },
-        Marionette: {
-            deps: ['backbone']
-        },
-        tpl: ['text']
+        async: 'vendor/async/lib/async',
+        socketio: 'vendor/socket.io-client/socket.io'
     },
     deps: ['Marionette', 'backbone', 'Router', 'App'],
     callback: function(Marionette, Backbone, Router, App){

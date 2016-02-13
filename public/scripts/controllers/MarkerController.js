@@ -1,7 +1,12 @@
 define(['Marionette', 'views/MarkerView', 'models/Image', 'async'], function(Marionette, MarkerView, Image, async){
     var MarkerController = Marionette.Object.extend({
-        initialize: function(app){
-            var image = new Image({name: 'image1.jpg'});
+        showMarkerView: function(region){
+            MarkerController.region = region;
+            this.showRandomUnlockedImage();
+        },
+
+        showRandomUnlockedImage: function(){
+            var image = new Image();
 
             async.waterfall([
                 function(cb){
@@ -10,7 +15,7 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async'], function(Mar
                     }});
                 },
                 function(image, cb){
-                    app.mainRegion.show(new MarkerView(image));
+                    MarkerController.region.show(new MarkerView(image));
                     cb();
                 }
             ]);

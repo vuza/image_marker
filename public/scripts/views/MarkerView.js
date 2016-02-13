@@ -41,7 +41,8 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
                 .attr('height', this.image.get('height'))
                 .attr('fill', 'url(#image)');
 
-            svg.selectAll('.dot')
+            // Do not load matrix, since it is not good up to now
+            /*svg.selectAll('.dot')
                 .data(this.image.get('matrix'))
                 .enter().append('circle')
                 .attr('class', 'dot')
@@ -51,7 +52,7 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
                 .style('fill', function(){ return randomColor({
                     format: 'hex'
                 }); })
-                .attr('fill-opacity', function(){ return Math.random() * (1 - 0.2) + 0.2; });
+                .attr('fill-opacity', function(){ return Math.random() * (1 - 0.2) + 0.2; });*/
         }
     });
 

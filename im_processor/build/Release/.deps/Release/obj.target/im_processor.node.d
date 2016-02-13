@@ -1,1 +1,0 @@
-cmd_Release/obj.target/im_processor.node := g++ -shared -pthread -rdynamic -m64  -Wl,-soname=im_processor.node -o Release/obj.target/im_processor.node -Wl,--start-group Release/obj.target/im_processor/src/im_processor.o -Wl,--end-group 
