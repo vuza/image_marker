@@ -18,12 +18,10 @@ define(['Marionette'], function(Marionette){
                     app.mainRegion.show(imageNavigationLayout);
 
                     // Load Marker to image
-                    var markerController = new MarkerController();
-                    markerController.showMarkerView(imageNavigationLayout.getRegion('image'));
+                    new MarkerController(imageNavigationLayout.getRegion('image'));
 
                     // Load Navigation to navigation
-                    var navigationController = new NavigationController();
-                    navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
+                    new NavigationController(imageNavigationLayout.getRegion('navigation'));
                 });
             }
         }

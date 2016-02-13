@@ -10,7 +10,8 @@ require.config({
         text: 'vendor/text/text',
         randomcolor: 'vendor/randomcolor/randomColor',
         async: 'vendor/async/lib/async',
-        socketio: 'vendor/socket.io-client/socket.io'
+        socketio: 'vendor/socket.io-client/socket.io',
+        Radio: 'vendor/backbone.radio/build/backbone.radio'
     },
     deps: ['Marionette', 'backbone', 'Router', 'App'],
     callback: function(Marionette, Backbone, Router, App){

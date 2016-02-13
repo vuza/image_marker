@@ -4,23 +4,23 @@ var io = require('socket.io')(3000); //TODO set in config
 module.exports = function(name, locked, width, height){
     var setLockedRecently = false,
         image = {
-        name: name,
-        locked: locked,
-        width: width,
-        height: height
-    };
+            name: name,
+            locked: locked,
+            width: width,
+            height: height
+        };
 
     io.on('connection', function(socket){
         socket.on(image.name + 'setLocked', function(data){
-            if(data.locked)
-                lockImage();
+            if(data.locked){
+                image.locked = true;
+                setLockedRecently = true;
+            } else {
+                image.locked = false;
+                setLockedRecently = false;
+            }
         });
     });
-
-    var lockImage = function(){
-        image.locked = true;
-        setLockedRecently = true;
-    };
 
     // Check lock status
     var intervalId = setInterval(function(){

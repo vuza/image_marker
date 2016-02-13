@@ -1,21 +1,26 @@
-define(['tpl!templates/navigationView.tpl', 'Marionette'], function(navigationView, Marionette) {
-    var NavigationView = Marionette.ItemView.extend({
-        template: navigationView,
+define(['tpl!templates/navigationView.tpl', 'Marionette', 'Radio'], function(navigationView, Marionette, Radio) {
+    var uiChannel,
+        NavigationView = Marionette.ItemView.extend({
+            template: navigationView,
 
-        initialize: function(){console.log(this)},
+            initialize: function(){
+                uiChannel = Radio.channel('uiChannel');
+            },
 
-        onRender: function(){return this;},
+            attributes: function () {
+                return {
+                    'id': 'navigationView'
+                }
+            },
 
-        ui: {
-            nextImage: '#nextImage'
-        },
+            ui: {
+                nextImage: '#nextImage'
+            },
 
-        attributes: function () {
-            return {
-                'id': 'navigationView'
+            events: {
+                'click @ui.nextImage': function(){ uiChannel.trigger('click:#nextImage'); }
             }
-        }
-    });
+        });
 
     return NavigationView;
 });

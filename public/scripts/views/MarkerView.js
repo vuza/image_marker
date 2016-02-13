@@ -8,6 +8,10 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
 
         onRender: function(){this.createSvg(); return this},
 
+        onDestroy: function(){
+            this.image.set('locked', false);
+        },
+
         attributes: function () {
             return {
                 'id': 'markerView'
