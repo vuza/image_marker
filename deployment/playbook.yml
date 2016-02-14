@@ -13,4 +13,4 @@
     npm: path=/var/node/image_marker
 
   - name: install frontend/bower dependencies
-    bower: path=/var/node/image_marker relative_execpath=node_modules/.bin
+    bower: path=/var/node/image_marker
