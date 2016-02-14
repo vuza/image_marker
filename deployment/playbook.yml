@@ -14,3 +14,12 @@
 
   - name: install frontend/bower dependencies
     bower: path=/var/node/image_marker
+
+  - name: Check list of Node.js apps running
+    command: forever list
+    register: forever_list
+    changed_when: false
+
+  - name: Start Node.js app
+    command: forever start /var/node/image_marker
+    when: "forever_list.stdout.find('/var/node/image_marker') == -1"

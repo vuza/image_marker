@@ -73,6 +73,12 @@ Install stuff ...
 - type npm install
 
 ## deployment
+### dependencies
+- Webservice for serving static files, nginx is recommended. It has to point to this repository's public folder
+- Node.js 5.x
+- cmake, boost, eigen3 and openCV, see ["C++ image processor/How to build the program"](#how-to-build-the-program)
+
+### ansible
 App can be deployed through ansible, run:
 ```
 ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
