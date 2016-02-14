@@ -24,7 +24,7 @@ image_processor
     |   index.html
 ```
 
-## development
+## Development
 
 ### Frontend
 - run npm install
@@ -72,8 +72,8 @@ Install stuff ...
 - goto im_processor
 - type npm install
 
-## deployment
-### dependencies
+## Deployment
+### Dependencies
 - Webservice for serving static files, nginx is recommended. It has to point to this repository's public folder
 - Node.js 5.x
 - cmake, boost, eigen3 and openCV, see ["C++ image processor/How to build the program"](#how-to-build-the-program)
