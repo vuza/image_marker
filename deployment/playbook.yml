@@ -12,6 +12,9 @@
   - name: install backend/npm dependencies
     npm: path=/var/node/image_marker
 
+  - name: install im_processor
+    npm: path=/var/node/image_marker/im_processor
+
   - name: install frontend/bower dependencies
     bower: path=/var/node/image_marker
 
