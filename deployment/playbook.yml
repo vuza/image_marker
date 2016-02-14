@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  become: True
   tasks:
 
   - name: Create directory for app
