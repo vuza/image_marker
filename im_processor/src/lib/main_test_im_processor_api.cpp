@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
 {
     std::cout << "Application started." << std::endl;
 
-    //Im_processor_api api = new Im_processor_api();
     Im_processor_api* api = new Im_processor_api();
     string json = api->getImageMatrix("image.1.jpg");
 
