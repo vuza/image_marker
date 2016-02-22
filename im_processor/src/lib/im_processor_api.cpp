@@ -2,7 +2,10 @@
 // Created by andreas on 09.01.16.
 //
 
+#include <opencv2/highgui/highgui_c.h>
 #include "im_processor_api.h"
+#include "FilesystemUtils.hh"
+#include "ColorMap.hpp"
 
 /**
  * empty constructor
@@ -71,20 +74,21 @@ std::string Im_processor_api::getImageMatrix(std::string imgName)
         result += "\"width\":" + to_string(image.rows) + ",";
         result += "\"height\":" + to_string(image.cols) + ",";
 
-        result += "\"data\":[{";
+        result += "\"data\":[";
             for(int x = 0; x < image.rows; x++)
             {
                 for(int y = 0; y < image.cols; y++)
                 {
-                    result+= "x:" + to_string(x) + ",";
-                    result+= "y:" + to_string(y) + ",";
+                    result += "{";
+                    result+= "\"x\":" + to_string(x) + ",";
+                    result+= "\"y\":" + to_string(y) + ",";
 
                     //calculate label from greyColor
                     int label = jvis::getLabel(image_labels(y,x));
                     label_test += to_string(label) + ",";
-                    result+= "label:" + to_string(label) + ",";
+                    result+= "\"label\":" + to_string(label) + ",";
 
-                    result+= "isContour: false" + "},"; //TODO check if true or false
+                    result+= "\"isContour\": false" + string("},"); //TODO check if true or false
                 }
             }
             result = result.substr(0, result.length()-1); //remove last ","

@@ -12,7 +12,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "RecursiveSuperpixelClustering.hh"
 #include "Slic.h"
-#include "ColorMap.hpp"
 
 #include <string>
 #include <vector>
@@ -49,11 +48,11 @@ private:
 
     vector<string> label_names;
 
-    string image_directory = "/home/marlon/Documents/Bac/prototype/public/images/";
+    string image_directory = "/media/andreas/Data/git/image_marker/test_images/";
     string image_name = "image";
     string image_ext = "jpg";
 
-    string label_directory = "/home/marlon/Documents/Bac/prototype/public/images/labels/";
+    string label_directory = "/media/andreas/Data/git/image_marker/test_images/labels/";
     string label_name = "labels";
     string label_ext = "png";
 

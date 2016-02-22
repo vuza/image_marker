@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 int main(int argc, char *argv[])
 {
     std::cout << "Application started." << std::endl;
@@ -17,5 +18,4 @@ int main(int argc, char *argv[])
     std::cout << json << std::endl;
 
     std::cout << "Application finished." << std::endl;
-
 }
