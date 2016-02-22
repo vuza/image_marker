@@ -67,28 +67,28 @@ std::string Im_processor_api::getImageMatrix(std::string imgName)
     string result = "";
     string label_test = "";
 
-    result += string("{\"imgName\":\"") + string(imgName) + string("\",");
-        result += string("\"width\":") + to_string(image.rows) + string(",");
-        result += string("\"height\":") + to_string(image.cols) + string(",");
+    result += "{\"imgName\":\"" + imgName + "\",";
+        result += "\"width\":" + to_string(image.rows) + ",";
+        result += "\"height\":" + to_string(image.cols) + ",";
 
-        result += "\"data\":{";
+        result += "\"data\":[{";
             for(int x = 0; x < image.rows; x++)
             {
                 for(int y = 0; y < image.cols; y++)
                 {
-                    result+= string("x:") + to_string(x) + string(",");
-                    result+= string("y:") + to_string(y) + string(",");
+                    result+= "x:" + to_string(x) + ",";
+                    result+= "y:" + to_string(y) + ",";
 
                     //calculate label from greyColor
                     int label = jvis::getLabel(image_labels(y,x));
-                    label_test += to_string(label) + string(",");
-                    result+= string("label:") + to_string(label) + string(",");
+                    label_test += to_string(label) + ",";
+                    result+= "label:" + to_string(label) + ",";
 
-                    result+= string("isContour: false") + string(","); //TODO check if true or false
+                    result+= "isContour: false" + "},"; //TODO check if true or false
                 }
             }
             result = result.substr(0, result.length()-1); //remove last ","
-        result += string("}");
+        result += string("]");
     result += string("}");
 
     return result;
