@@ -3,6 +3,8 @@ var fs = require('fs'),
     merge = require('merge'),
     im_processor = require('./../im_processor/build/Release/im_processor'),
     Image = require('./../models/Image'),
+    mkdirp = require('mkdirp'),
+    config = require('./../config'),
     images = {};
 
 var ImageController = {
@@ -48,15 +50,23 @@ var ImageController = {
 
     loadImages: function () {
         var i = 0;
-        fs.readdirSync('./public/images').forEach(function (file) {
-            if(!fs.lstatSync('./public/images/' + file).isDirectory()){
-                var dim = sizeOf('./public/images/' + file);
+        try{
+            fs.readdirSync(config.imageLocation).forEach(function (file) {
+                if(!fs.lstatSync(config.imageLocation + file).isDirectory()){
+                    var dim = sizeOf(config.imageLocation + file);
 
-                images[file] = new Image(file, false, dim['width'], dim['height']);
+                    images[file] = new Image(file, false, dim['width'], dim['height']);
 
-                i++;
-            }
-        });
+                    i++;
+                }
+            });
+        } catch(e){
+            // There is no image folder
+
+            mkdirp(config.imageLocation, function (err) {
+                if (err) console.error(err); //TODO errorhandling
+            });
+        }
     },
 
     loadMatrix: function (image, cb) {
