@@ -30,4 +30,7 @@
     ignore_errors: yes # Says it did not work, but it works!
 
   - name: Start Node.js app
+    environment:
+      API: "http://localhost:3991/api/v1"
+      SOCKET: "http://localhost:3000"
     command: forever start -al {{ loggingLocation }}/forever.log {{ root }}/server.js
