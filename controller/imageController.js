@@ -64,7 +64,7 @@ var ImageController = {
             // There is no image folder
 
             mkdirp(config.imageLocation, function (err) {
-                if (err) console.error(err); //TODO errorhandling
+                if (err) console.error(err); //TODO error handling
             });
         }
     },
