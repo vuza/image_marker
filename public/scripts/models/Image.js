@@ -1,4 +1,4 @@
-define(['models/Model', 'socketio'], function (Model, socketio) {
+define(['models/Model', 'socketio', 'config'], function (Model, socketio, config) {
     var socket,
         Image = Model.extend({
             initialize: function () {
@@ -14,7 +14,7 @@ define(['models/Model', 'socketio'], function (Model, socketio) {
                 matrix: []
             },
 
-            urlRoot: 'http://localhost:3991/api/v1/image',
+            urlRoot: config.api + '/image',
 
             url: function () {
                 if (this.get('name') && this.get('name') != '')
