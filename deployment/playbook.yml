@@ -31,5 +31,5 @@
     changed_when: false
 
   - name: Start Node.js app
-    command: forever start {{ root }}
-    when: "forever_list.stdout.find('{{ root }}') == -1"
+    command: forever start {{ root }}/server.js -l {{ loggingLocation }}/forever.log
+    when: "forever_list.stdout.find('{{ root }}/server.js') == -1"
