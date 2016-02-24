@@ -1,21 +1,23 @@
 ---
 - hosts: all
+  vars_files:
+    - vars/all.yml
   tasks:
 
   - name: Create directory for app
-    file: path=/var/node/image_marker state=directory
+    file: path={{ root }} state=directory
 
   - name: checkout repo
-    git: repo=git@github.com:vuza/image_marker.git dest=/var/node/image_marker force=yes accept_hostkey=True version=develop
+    git: repo={{ git }} dest={{ root }} force=yes accept_hostkey=True version=develop
 
   - name: install backend/npm dependencies
-    npm: path=/var/node/image_marker
+    npm: path={{ root }}
 
   - name: install im_processor
-    npm: path=/var/node/image_marker/im_processor
+    npm: path={{ root }}
 
   - name: install frontend/bower dependencies
-    bower: path=/var/node/image_marker
+    bower: path={{ root }}
 
   - name: Check list of Node.js apps running
     command: forever list
@@ -23,5 +25,5 @@
     changed_when: false
 
   - name: Start Node.js app
-    command: forever start /var/node/image_marker
-    when: "forever_list.stdout.find('/var/node/image_marker') == -1"
+    command: forever start {{ root }}
+    when: "forever_list.stdout.find('{{ root }}') == -1"
