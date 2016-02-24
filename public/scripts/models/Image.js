@@ -2,7 +2,7 @@ define(['models/Model', 'socketio', 'config'], function (Model, socketio, config
     var socket,
         Image = Model.extend({
             initialize: function () {
-                socket = socketio('http://localhost:3000'); //TODO set in config
+                socket = socketio(config.socket);
                 this.on('change:locked', this.updateLockstatus, this);
             },
 
