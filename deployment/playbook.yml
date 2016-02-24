@@ -25,12 +25,21 @@
   - name: install frontend/bower dependencies
     bower: path={{ root }}
 
+  - name: replace frontend config (1)
+    replace:
+      dest={{ root }}/public/scripts/config.js
+      regexp="api:(.*)"
+      replace="api:'http://alagoda.at:3991/api/v1',"
+
+  - name: replace frontend config (2)
+    replace:
+      dest={{ root }}/public/scripts/config.js
+      regexp="socket:(.*)"
+      replace="api:'http://alagoda.at:3000',"
+
   - name: Stop Node.js app
     command: forever stop {{ root }}/server.js
     ignore_errors: yes # Says it did not work, but it works!
 
   - name: Start Node.js app
-    environment:
-      API: "http://localhost:3991/api/v1"
-      SOCKET: "http://localhost:3000"
     command: forever start -al {{ loggingLocation }}/forever.log {{ root }}/server.js
