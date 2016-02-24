@@ -2,19 +2,25 @@
 - hosts: all
   vars_files:
     - vars/all.yml
+  remote_user: "{{ remote_user }}"
   tasks:
 
   - name: Create directory for app
-    file: path={{ root }} state=directory
+    become: True
+    file: path={{ root }} state=directory owner={{ remote_user }} group=www-data
+
+  - name: Create logging directory
+    become: True
+    file: path={{ loggingLocation }} state=directory owner={{ remote_user }}
 
   - name: checkout repo
-    git: repo={{ git }} dest={{ root }} force=yes accept_hostkey=True version=develop
+    git: repo={{ git }} dest={{ root }} force=yes accept_hostkey=True version={{ gitVersion }}
 
   - name: install backend/npm dependencies
     npm: path={{ root }}
 
   - name: install im_processor
-    npm: path={{ root }}
+    npm: path={{ root }}/im_processor
 
   - name: install frontend/bower dependencies
     bower: path={{ root }}
