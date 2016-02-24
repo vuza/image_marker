@@ -25,11 +25,9 @@
   - name: install frontend/bower dependencies
     bower: path={{ root }}
 
-  - name: Check list of Node.js apps running
-    command: forever list
-    register: forever_list
-    changed_when: false
+  - name: Stop Node.js app
+    command: forever stop {{ root }}/server.js
+    ignore_errors: yes # Says it did not work, but it works!
 
   - name: Start Node.js app
-    command: forever start {{ root }}/server.js -l {{ loggingLocation }}/forever.log
-    when: "forever_list.stdout.find('{{ root }}/server.js') == -1"
+    command: forever start -al {{ loggingLocation }}/forever.log {{ root }}/server.js
