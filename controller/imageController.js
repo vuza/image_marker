@@ -52,8 +52,9 @@ var ImageController = {
         var i = 0;
         try{
             fs.readdirSync(config.imageLocation).forEach(function (file) {
-                if(!fs.lstatSync(config.imageLocation + file).isDirectory()){
-                    var dim = sizeOf(config.imageLocation + file);
+                var image = config.imageLocation + '/' + file;
+                if(!fs.lstatSync(image).isDirectory()){
+                    var dim = sizeOf(image);
 
                     images[file] = new Image(file, false, dim['width'], dim['height']);
 
