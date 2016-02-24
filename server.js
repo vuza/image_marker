@@ -1,6 +1,14 @@
 var router = require('./router'),
     imageController = require('./controller/imageController'),
+    config = require('./config'),
+    winston = require('winston'),
     server = require('express')();
+
+/**
+ * Set up logging
+ */
+winston.level = config.logging.level;
+winston.add(winston.transports.File, { filename: config.logging.location + '/' + config.logging.fileName });
 
 /**
  * Load images
