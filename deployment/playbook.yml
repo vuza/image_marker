@@ -35,7 +35,7 @@
     replace:
       dest={{ root }}/public/scripts/config.js
       regexp="socket:(.*)"
-      replace="api:'http://alagoda.at:3000',"
+      replace="socket:'http://alagoda.at:3000',"
 
   - name: Stop Node.js app
     command: forever stop {{ root }}/server.js
