@@ -1,4 +1,5 @@
 var config = require('./../config'),
+    winston = require('winston'),
     io = require('socket.io')(config.socket.port);
 
 // It is wrapped in a function, so we can use JS new operator
@@ -13,24 +14,18 @@ module.exports = function(name, locked, width, height){
 
     io.on('connection', function(socket){
         socket.on(image.name + 'setLocked', function(data){
-            if(data.locked){
-                image.locked = true;
-                setLockedRecently = true;
-            } else {
-                image.locked = false;
-                setLockedRecently = false;
-            }
+            setLockedRecently = data.locked;
+
+            winston.verbose('[received] ' + image.name + ', locked: ' + data.locked);
         });
     });
 
     // Check lock status
-    var intervalId = setInterval(function(){
-        if(!setLockedRecently) {
-            image.locked = false;
-            clearInterval(intervalId);
-        }
-
+    setInterval(function(){
+        image.locked = setLockedRecently;
         setLockedRecently = false;
+
+        winston.verbose('[update status] ' + image.name + ', locked: ' + image.locked);
     }, 11000);
 
     return image;

@@ -7,6 +7,7 @@ var router = require('./router'),
 /**
  * Set up logging
  */
+winston.cli();
 winston.level = config.logging.level;
 winston.add(winston.transports.File, { filename: config.logging.location + '/' + config.logging.fileName });
 
