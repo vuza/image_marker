@@ -31,4 +31,6 @@ server.use(function (req, res, next) {
 
 server.use('/api/v1/', router);
 
-server.listen(3991);
+server.listen(config.listenPort, function(){
+    winston.info('Start listening at ' + config.listenPort);
+});

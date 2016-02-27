@@ -5,10 +5,13 @@ var fs = require('fs'),
     Image = require('./../models/Image'),
     mkdirp = require('mkdirp'),
     config = require('./../config'),
+    wiston = require('winston'),
     images = {};
 
 var ImageController = {
     getRandomUnlockedImage: function (req, res) {
+        wiston.verbose('Get a random unlocked image');
+
         var image = false;
 
         Object.keys(images).every(function (name) {
@@ -22,19 +25,24 @@ var ImageController = {
 
         if (image)
             ImageController.loadMatrix(image, function (err, image) {
-                if (err)
-                    res.status(200).send({err: {msg: 'Could no load image matrix', code: 1}, result: null});
-                else {
+                if (err) {
+                    wiston.debug('Could not load image matrix');
+                    res.status(200).send({err: {msg: 'Could not load image matrix', code: 1}, result: null});
+                } else {
                     image.locked = true;
                     res.status(200).send({err: null, result: image});
                 }
             });
-        else
+        else {
+            wiston.debug('No unlocked image found');
             res.status(200).send({err: {msg: 'No unlocked image found', code: 0}, result: null});
+        }
     },
 
     getImage: function (req, res) {
         var image = images[req.params['name']];
+        wiston.verbose('Get image: ' + image);
+
         if (image)
             ImageController.loadMatrix(image, function (err, image) {
                 if (err)
@@ -49,6 +57,8 @@ var ImageController = {
     },
 
     loadImages: function () {
+        wiston.debug('Load images');
+
         var i = 0;
         try{
             fs.readdirSync(config.imageLocation).forEach(function (file) {
