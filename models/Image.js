@@ -14,7 +14,7 @@ module.exports = function(name, locked, width, height){
 
     io.on('connection', function(socket){
         socket.on(image.name + 'setLocked', function(data){
-            setLockedRecently = data.locked;
+            setLockedRecently = image.locked = data.locked;
 
             winston.verbose('[received] ' + image.name + ', locked: ' + data.locked);
         });
