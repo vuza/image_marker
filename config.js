@@ -2,7 +2,7 @@ module.exports = {
     listenPort: 3991,
     imageLocation: './public/images',
     logging: {
-        level: 'verbose',
+        level: 'debug',
         location: '/var/log/image_marker',
         fileName: 'application.log'
     },

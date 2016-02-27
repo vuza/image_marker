@@ -14,23 +14,23 @@ winston.add(winston.transports.File, { filename: config.logging.location + '/' +
 /**
  * Load images
  */
-if(!imageController.loadImages()){
-    winston.error('Could not find or create image folder');
-    return; // Stop program
-}
+imageController.loadImages(function(err){
+    if(err)
+        winston.error('Could not find or create image folder');
 
-/**
- * Init and start server
- */
-server.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    /**
+     * Init and start server
+     */
+    server.use(function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    next();
-});
+        next();
+    });
 
-server.use('/api/v1/', router);
+    server.use('/api/v1/', router);
 
-server.listen(config.listenPort, function(){
-    winston.info('Start listening at ' + config.listenPort);
+    server.listen(config.listenPort, function(){
+        winston.info('Start listening at ' + config.listenPort);
+    });
 });

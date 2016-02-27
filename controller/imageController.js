@@ -6,34 +6,30 @@ var fs = require('fs'),
     mkdirp = require('mkdirp'),
     config = require('./../config'),
     wiston = require('winston'),
+    async = require('async'),
     images = {};
 
 var ImageController = {
     getRandomUnlockedImage: function (req, res) {
         wiston.verbose('Get a random unlocked image');
 
-        var image = false;
+        var image = null;
 
         Object.keys(images).every(function (name) {
             if (!images[name].locked) {
+                images[name].locked = true;
                 image = images[name];
+
                 return false;
             }
 
             return true;
         });
 
-        if (image)
-            ImageController.loadMatrix(image, function (err, image) {
-                if (err) {
-                    wiston.debug('Could not load image matrix');
-                    res.status(200).send({err: {msg: 'Could not load image matrix', code: 1}, result: null});
-                } else {
-                    image.locked = true;
-                    res.status(200).send({err: null, result: image});
-                }
-            });
-        else {
+        if (image) {
+            image.locked = true;
+            res.status(200).send({err: null, result: image});
+        } else {
             wiston.debug('No unlocked image found');
             res.status(200).send({err: {msg: 'No unlocked image found', code: 0}, result: null});
         }
@@ -43,53 +39,69 @@ var ImageController = {
         var image = images[req.params['name']];
         wiston.verbose('Get image: ' + image);
 
-        if (image)
-            ImageController.loadMatrix(image, function (err, image) {
-                if (err)
-                    res.status(200).send({err: {msg: 'Could no load image matrix', code: 1}, result: null});
-                else {
-                    image.locked = true;
-                    res.status(200).send({err: null, result: image});
-                }
-            });
-        else
+        if (image) {
+            image.locked = true;
+            res.status(200).send({err: null, result: image});
+        } else
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
 
-    loadImages: function () {
+    loadImages: function (cb) {
         wiston.debug('Load images');
 
         var i = 0;
-        try{
+        try {
             fs.readdirSync(config.imageLocation).forEach(function (file) {
-                var image = config.imageLocation + '/' + file;
-                if(!fs.lstatSync(image).isDirectory()){
-                    var dim = sizeOf(image);
+                var path = config.imageLocation + '/' + file;
+                if (!fs.lstatSync(path).isDirectory()) {
+                    var dim = sizeOf(path);
 
                     images[file] = new Image(file, false, dim['width'], dim['height']);
 
                     i++;
                 }
             });
-        } catch(e){
+        } catch (e) {
             // There is no image folder, create it
 
-            try{
+            try {
                 mkdirp.sync(config.imageLocation);
-            } catch(e){
+            } catch (e) {
                 // Could not create image folder, return false
 
-                return false;
+                cb(true);
             }
         }
 
-        return true;
+        // Load matrices
+
+        // Create tasks
+        var tasks = [];
+        Object.keys(images).every(function (name) {
+            tasks.push(
+                function (cb) {
+                    ImageController.loadMatrix(images[name], function (err, image) {
+                        // Save image to images
+                        images[image.name] = image;
+
+                        cb(err);
+                    });
+                }
+            );
+
+            return true;
+        });
+
+        // Run tasks
+        async.parallel(tasks, function (err, results) {
+            cb(err);
+        });
     },
 
     loadMatrix: function (image, cb) {
         im_processor.getImageMatrix(image.name, function (err, result) {
-            if(cb)
-                if(err)
+            if (cb)
+                if (err)
                     cb(err);
                 else
                     cb(null, merge({matrix: result}, image));

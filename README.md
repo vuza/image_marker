@@ -87,7 +87,6 @@ You can omit the -u parameter if your local user is equal to remote user at alag
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
 
 ## Guidelines
-### Error Codes
+### Exploited Errors
 - 0: 'No unlocked image found'
-- 1: 'Could no load image matrix'
 - 2: 'Image [name] not found'
