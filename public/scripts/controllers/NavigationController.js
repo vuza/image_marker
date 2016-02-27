@@ -1,9 +1,9 @@
 define(['Marionette', 'views/NavigationView'], function(Marionette, NavigationView){
     var NavigationController = Marionette.Object.extend({
-        initialize: function(region){
+        show: function(region){
             region.show(new NavigationView());
         }
     });
 
-    return NavigationController;
+    return new NavigationController();
 });

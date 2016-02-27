@@ -12,16 +12,16 @@ define(['Marionette'], function(Marionette){
             '': function(){
                 loadDefaultWrapper();
 
-                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function(ImageNavigationLayout, MarkerController, NavigationController){
+                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function(ImageNavigationLayout, markerController, navigationController){
                     // Create layout and render to main section
                     var imageNavigationLayout = new ImageNavigationLayout();
                     app.mainRegion.show(imageNavigationLayout);
 
                     // Load Marker to image
-                    new MarkerController(imageNavigationLayout.getRegion('image'));
+                    markerController.show(imageNavigationLayout.getRegion('image'));
 
                     // Load Navigation to navigation
-                    new NavigationController(imageNavigationLayout.getRegion('navigation'));
+                    navigationController.show(imageNavigationLayout.getRegion('navigation'));
                 });
             }
         }

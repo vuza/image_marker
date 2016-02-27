@@ -62,12 +62,18 @@ var ImageController = {
                 }
             });
         } catch(e){
-            // There is no image folder
+            // There is no image folder, create it
 
-            mkdirp(config.imageLocation, function (err) {
-                if (err) console.error(err); //TODO error handling
-            });
+            try{
+                mkdirp.sync(config.imageLocation);
+            } catch(e){
+                // Could not create image folder, return false
+
+                return false;
+            }
         }
+
+        return true;
     },
 
     loadMatrix: function (image, cb) {

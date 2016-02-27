@@ -15,8 +15,8 @@ require.config({
         Radio: 'vendor/bower/backbone.radio/build/backbone.radio',
         config: 'config'
     },
-    deps: ['Marionette', 'backbone', 'Router', 'App'],
-    callback: function(Marionette, Backbone, Router, App){
+    deps: ['Marionette', 'backbone', 'Router', 'App', 'Radio'],
+    callback: function(Marionette, Backbone, Router, App, Radio){
         var app = new App();
 
         app.on('before:start', function(){
@@ -25,6 +25,13 @@ require.config({
 
         var router = new Router({app: app});
 
+        // Start App
         app.start();
+
+        // Reply requests via Radio
+        Radio.channel('regionsChannel')
+            .reply('errorRegion', function(){
+                return app.getRegion('errorRegion');
+            });
     }
 });

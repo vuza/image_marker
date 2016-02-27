@@ -1,4 +1,4 @@
-define(['models/Model', 'socketio', 'config'], function (Model, socketio, config) {
+define(['models/Model', 'socketio', 'config', 'controllers/ErrorController'], function (Model, socketio, config, errorController) {
     var socket,
         Image = Model.extend({
             initialize: function () {
@@ -30,7 +30,10 @@ define(['models/Model', 'socketio', 'config'], function (Model, socketio, config
             },
 
             err: function (err) {
-                console.log('oh we got an error, see: ' + JSON.stringify(err)); //TODO implement proper error handling
+                if(err.code == 0)
+                    console.log('No unlocked image found'); // "No unlocked image found" TODO redirect to image overview
+                else
+                    errorController.show('Error while parsing image response from server, error: ' + JSON.stringify(err));
             },
 
             updateLockstatus: function () {

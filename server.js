@@ -13,7 +13,10 @@ winston.add(winston.transports.File, { filename: config.logging.location + '/' +
 /**
  * Load images
  */
-imageController.loadImages();
+if(!imageController.loadImages()){
+    winston.error('Could not find or create image folder');
+    return; // Stop program
+}
 
 /**
  * Init and start server
