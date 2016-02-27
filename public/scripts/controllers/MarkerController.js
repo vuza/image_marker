@@ -1,10 +1,36 @@
-define(['Marionette', 'views/MarkerView'], function(Marionette, MarkerView){
-    var MarkerController = Marionette.Object.extend({
-        initialize: function(app){
-            var markerView = new MarkerView();
-            app.mainRegion.show(markerView);
-        }
-    });
+define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], function (Marionette, MarkerView, Image, async, Radio) {
+    var uiChannel,
+        MarkerController = Marionette.Object.extend({
+            initialize: function () {
+                uiChannel = Radio.channel('uiChannel');
+                markerChannel = Radio.channel('markerChannel');
 
-    return MarkerController;
+                uiChannel.on('click:#nextImage', this.showRandomUnlockedImage);
+            },
+
+            show: function(region){
+                MarkerController.region = region;
+                this.showRandomUnlockedImage();
+            },
+
+            showRandomUnlockedImage: function () {
+                var image = new Image();
+
+                async.waterfall([
+                    function (cb) {
+                        image.fetch({
+                            success: function (image) {
+                                cb(null, image);
+                            }
+                        });
+                    },
+                    function (image, cb) {
+                        MarkerController.region.show(new MarkerView(image));
+                        cb();
+                    }
+                ]);
+            }
+        });
+
+    return new MarkerController();
 });

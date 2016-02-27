@@ -1,7 +1,5 @@
-/node_modules/
-/.idea
-
-/im_processor/src/build/
-/im_processor/src/.idea
-
+node_modules
+.idea
+build
 *~
+public/scripts/vendor/bower

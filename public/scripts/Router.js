@@ -1,30 +1,33 @@
-define(['Marionette'], function(Marionette){
+define(['Marionette'], function (Marionette) {
     var app,
-        router = Marionette.AppRouter.extend({
-        initialize: function(opt){
-            app = opt.app;
-        },
+        Router = Marionette.AppRouter.extend({
+            initialize: function (opt) {
+                app = opt.app;
+            },
 
-        /**
-         * Routes, can be accessed via ..router.navigate(route, options)
-         */
-        routes: {
-            '': function(){
-                loadDefaultWrapper();
+            /**
+             * Routes, can be accessed via ..router.navigate(route, options)
+             */
+            routes: {
+                '': function () {
+                    require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
+                        // Create layout and render to main section
+                        var imageNavigationLayout = new ImageNavigationLayout();
+                        app.mainRegion.show(imageNavigationLayout);
 
-                require(['controllers/MarkerController'], function(MarkerController){
-                    new MarkerController(app);
-                });
+                        // Load Marker to image
+                        markerController.show(imageNavigationLayout.getRegion('image'));
+
+                        // Load Navigation to navigation
+                        navigationController.show(imageNavigationLayout.getRegion('navigation'));
+                    });
+                },
+
+                'overview': function () {
+                    console.log('welcome to overview');
+                }
             }
-        }
-    });
+        });
 
-    /**
-     * Load Header, Footer, etc.
-     */
-    var loadDefaultWrapper = function(){
-        //Load header, footer, etc.
-    };
-
-    return router;
+    return Router;
 });

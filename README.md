@@ -1,4 +1,5 @@
 # image_marker
+Web application to mark objects on images.
 
 Web application to mark objects on images. This repo includes C++ Code for image processing, Node.js server and Marionette.js web client.
 
@@ -23,70 +24,70 @@ image_processor
     |   index.html
 ```
 
-## development
+## Development
 
-### Git flow
+### Frontend
+- run npm install
+- config your webserver to point to public/index.html or use ansible script for deployment (see "deployment")
+
+### Backend
+#### Git flow
 This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
 
-### Semver
+#### Semver
 The webapp (client and frontend) is using Semantic Versioning (http://semver.org/), be sure to update version in package.json correctly.
 
-## deployment
-App can be deployed through ansible, run:
-```
-ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
-```
-You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
-The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
-
-# development
-This repo uses (at least is trying to) git flow, stick to the rules: http://nvie.com/posts/a-successful-git-branching-model/
-
-## C++ image processor
+#### C++ image processor
 
 Can be found at ./im_processor/src/lib/*
 
-### How to build the program
-Ihr benötigt auf jeden Fall die üblichen Develop-Sachen:
+##### How to build the program
+Install stuff ...
 
 - C++ (apt-get install build-essential)
 - CMake (sudo apt-get install cmake cmake-curses-gui)
 - Pkg-config (sudo apt-get install pkg-config)
 
-und 
+... and ... 
 
 - Boost (sudo apt-get install libboost-all-dev)
 - Eigen3 (sudo apt-get install libeigen3-dev)
 - OpenCV 2.x (http://opencv.org/): Ich verwende die src-Version. Es sollte aber auch das Ubuntu-Package funktionieren.
 (install instructions: http://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html)
 
-Dann:
+... then ...
 
-cd ImageLabelling
-mkdir build
-cd build
-cmake ..
-make
+- cd ImageLabelling
+- mkdir build
+- cd build
+- cmake ..
+- make
 
-
-### How to start the program
+##### How to start the program
 ./labelImageSoilCover --help
 ./labelImageSoilCover -d "path/to/input/directory/" -s 100 -c 10
 
-### api (not implemented)
-```c++
-/**
- * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
- */
-Matrix imgMatrix getImageMatrix(String imgName)
+#### im_processor c++ native node module
+##### How to build node module
+- goto im_processor
+- type npm install
 
-/**
- * fills the segment around the x and y coordinate with the given label
- */
-Matrix imgMatrix fillSegment(String imgName, Matrix imgMatrix, int x, int y, int label) 
+## Deployment
+### Dependencies
+- Webservice for serving static files, nginx is recommended. It has to point to this repository's public folder
+- Node.js 5.x
+- cmake, boost, eigen3 and openCV, see ["C++ image processor/How to build the program"](#how-to-build-the-program)
 
-/**
- * fills all unlabeledSegments with the given label
- */
-Matrix imgMatrix fillAllUnlabeledSegments(String imgName, Matrix imgMatrix, int label)
+### ansible
+App can be deployed through ansible, run:
 ```
+ansible-playbook deployment/playbook.yml -u <your-user>
+```
+You can omit the -u parameter if your local user is equal to remote user at alagoda.at, ansible will always ask you for sudo and ssh password.
+The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
+
+## Guidelines
+### Error Codes
+- 0: 'No unlocked image found'
+- 1: 'Could no load image matrix'
+- 2: 'Image [name] not found'

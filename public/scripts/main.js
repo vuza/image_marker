@@ -1,47 +1,42 @@
 require.config({
     baseUrl: '/scripts/',
     paths: {
-        jquery: 'vendor/jquery/dist/jquery',
-        d3: 'vendor/d3/d3',
-        backbone: 'vendor/backbone/backbone',
-        underscore: 'vendor/underscore/underscore',
-        Marionette: 'vendor/backbone.marionette/lib/backbone.marionette',
+        lodash: 'vendor/bower/lodash/lodash',
+        jquery: 'vendor/bower/jquery/dist/jquery',
+        d3: 'vendor/bower/d3/d3',
+        backbone: 'vendor/bower/backbone/backbone',
+        underscore: 'vendor/bower/underscore/underscore',
+        Marionette: 'vendor/bower/backbone.marionette/lib/backbone.marionette',
         tpl: 'vendor/underscore-tpl/underscore-tpl',
-        text: 'vendor/text/text'
+        text: 'vendor/bower/text/text',
+        randomcolor: 'vendor/bower/randomcolor/randomColor',
+        async: 'vendor/bower/async/lib/async',
+        socketio: 'vendor/bower/socket.io-client/socket.io',
+        Radio: 'vendor/bower/backbone.radio/build/backbone.radio',
+        config: 'config'
     },
-    shim: {
-        underscore: {
-            exports: '_'
-        },
-        d3: {
-            deps: ['jquery']
-        },
-        backbone: {
-            deps: ['jquery', 'underscore'],
-            exports: 'Backbone'
-        },
-        jquery: {
-            exports: '$'
-        },
-        Marionette: {
-            deps: ['backbone']
-        },
-        tpl: ['text']
-    },
-    deps: ['Marionette', 'backbone', 'Router'],
-    callback: function(Marionette, Backbone, Router){
-        var app = new Marionette.Application();
+    deps: ['Marionette', 'backbone', 'Router', 'App', 'Radio'],
+    callback: function (Marionette, Backbone, Router, App, Radio) {
+        var app = new App();
 
-        app.on('before:start', function(){
+        app.on('before:start', function () {
             Backbone.history.start({pushState: true, root: '/'});
-        });
-
-        app.addRegions({
-            mainRegion: "#mainRegion"
         });
 
         var router = new Router({app: app});
 
+        // Start App
         app.start();
+
+        // Reply requests via Radio
+        Radio.channel('regionsChannel')
+            .reply('errorRegion', function () {
+                return app.getRegion('errorRegion');
+            });
+
+        Radio.channel('router')
+            .on('navigate', function (to) {
+                router.navigate(to);
+            });
     }
 });

@@ -1,41 +1,62 @@
-define(['tpl!templates/markerView.tpl', 'Marionette', 'd3'], function(markerView, Marionette, d3) {
+define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], function(markerView, Marionette, d3, randomColor) {
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
-        initialize: function(){
-            var scaleX = d3.scale.linear()
-                .domain([-30,30])
-                .range([0,600]);
+        initialize: function(image){
+            this.image = image;
+        },
 
-            var scaleY = d3.scale.linear()
-                    .domain([0,50])
-                    .range([500,0]);
+        onRender: function(){this.createSvg(); return this},
 
+        onDestroy: function(){
+            this.image.set('locked', false);
+        },
+
+        attributes: function () {
+            return {
+                'id': 'markerView'
+            }
+        },
+
+        createSvg: function(){
             // create the svg
-            var margin = {top: 20, right: 20, bottom: 30, left: 40},
-                width = 960 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
+            var svg = d3.select(this.el).append("svg")
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
+                .append("g");
 
-            var svg = d3.select("body").append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            // add the image
+            var defs = svg.append("defs");
 
-            // first test polygon
-            var points = [{"x":0.0, "y":25.0},
-                {"x":8.5,"y":23.4},
-                {"x":13.0,"y":21.0},
-                {"x":19.0,"y":15.5}];
+            defs.append('pattern')
+                .attr('id', 'image')
+                .attr('patternUnits', 'userSpaceOnUse')
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
+                .append('image')
+                .attr('xlink:href', '/images/' + this.image.get('name'))
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'));
 
-            svg.append("polygon")
-                .attr("stroke","black")
-                .attr("stroke-width",2)
-                .attr("points",function(d) {
-                    return points.map(function(d) {
-                        return [scaleX(d.x), scaleY(d.y)].join(",");
-                    }).join(" ");
-                });
+            svg.append('rect')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', this.image.get('width'))
+                .attr('height', this.image.get('height'))
+                .attr('fill', 'url(#image)');
+
+            // Do not load matrix, since it is not good up to now
+            /*svg.selectAll('.dot')
+                .data(this.image.get('matrix'))
+                .enter().append('circle')
+                .attr('class', 'dot')
+                .attr('r', 1)
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; })
+                .style('fill', function(){ return randomColor({
+                    format: 'hex'
+                }); })
+                .attr('fill-opacity', function(){ return Math.random() * (1 - 0.2) + 0.2; });*/
         }
     });
 
