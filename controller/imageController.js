@@ -45,7 +45,7 @@ var ImageController = {
                 }
             });
         else
-            res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 3}, result: null});
+            res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
 
     loadImages: function () {
