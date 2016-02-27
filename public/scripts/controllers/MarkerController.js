@@ -3,6 +3,8 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
         MarkerController = Marionette.Object.extend({
             initialize: function () {
                 uiChannel = Radio.channel('uiChannel');
+                markerChannel = Radio.channel('markerChannel');
+
                 uiChannel.on('click:#nextImage', this.showRandomUnlockedImage);
             },
 

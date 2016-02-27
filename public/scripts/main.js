@@ -16,10 +16,10 @@ require.config({
         config: 'config'
     },
     deps: ['Marionette', 'backbone', 'Router', 'App', 'Radio'],
-    callback: function(Marionette, Backbone, Router, App, Radio){
+    callback: function (Marionette, Backbone, Router, App, Radio) {
         var app = new App();
 
-        app.on('before:start', function(){
+        app.on('before:start', function () {
             Backbone.history.start({pushState: true, root: '/'});
         });
 
@@ -30,8 +30,13 @@ require.config({
 
         // Reply requests via Radio
         Radio.channel('regionsChannel')
-            .reply('errorRegion', function(){
+            .reply('errorRegion', function () {
                 return app.getRegion('errorRegion');
+            });
+
+        Radio.channel('router')
+            .on('navigate', function (to) {
+                router.navigate(to);
             });
     }
 });

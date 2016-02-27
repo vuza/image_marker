@@ -1,5 +1,6 @@
-define(['models/Model', 'socketio', 'config', 'controllers/ErrorController'], function (Model, socketio, config, errorController) {
+define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Radio'], function (Model, socketio, config, errorController, Radio) {
     var socket,
+        routerChannel = Radio.channel('router'),
         Image = Model.extend({
             initialize: function () {
                 socket = socketio(config.socket);
@@ -31,7 +32,7 @@ define(['models/Model', 'socketio', 'config', 'controllers/ErrorController'], fu
 
             err: function (err) {
                 if(err.code == 0)
-                    console.log('No unlocked image found'); // "No unlocked image found" TODO redirect to image overview
+                    routerChannel.trigger('navigate', 'overview'); // "No unlocked image found" ==> load overview!
                 else
                     errorController.show('Error while parsing image response from server, error: ' + JSON.stringify(err));
             },
