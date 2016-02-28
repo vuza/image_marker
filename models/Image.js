@@ -4,29 +4,36 @@ var config = require('./../config'),
 
 // It is wrapped in a function, so we can use JS new operator
 module.exports = function(name, locked, width, height){
+    /**
+     * Private vars
+     */
     var setLockedRecently = false,
-        image = {
-            name: name,
-            locked: locked,
-            width: width,
-            height: height
-        };
+        This = this;
 
+    /**
+     * Public vars
+     */
+    this.name = name;
+    this.locked = locked;
+    this.width = width;
+    this.height = height;
+
+    /**
+     * Private logic
+     */
     io.on('connection', function(socket){
-        socket.on(image.name + 'setLocked', function(data){
-            setLockedRecently = image.locked = data.locked;
+        socket.on(This.name + 'setLocked', function(data){
+            setLockedRecently = This.locked = data.locked;
 
-            winston.verbose('[received] ' + image.name + ', locked: ' + data.locked);
+            winston.verbose('[received] ' + This.name + ', locked: ' + data.locked);
         });
     });
 
     // Check lock status
     setInterval(function(){
-        image.locked = setLockedRecently;
+        This.locked = setLockedRecently;
         setLockedRecently = false;
 
-        winston.verbose('[update status] ' + image.name + ', locked: ' + image.locked);
+        winston.verbose('[update status] ' + This.name + ', locked: ' + This.locked);
     }, 11000);
-
-    return image;
 };

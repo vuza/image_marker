@@ -1,6 +1,5 @@
 var fs = require('fs'),
     sizeOf = require('image-size'),
-    merge = require('merge'),
     im_processor = require('./../im_processor/build/Release/im_processor'),
     Image = require('./../models/Image'),
     mkdirp = require('mkdirp'),
@@ -17,8 +16,8 @@ var ImageController = {
 
         Object.keys(images).every(function (name) {
             if (!images[name].locked) {
-                images[name].locked = true;
                 image = images[name];
+                image.locked = true;
 
                 return false;
             }
@@ -27,7 +26,6 @@ var ImageController = {
         });
 
         if (image) {
-            image.locked = true;
             res.status(200).send({err: null, result: image});
         } else {
             wiston.debug('No unlocked image found');
@@ -93,7 +91,7 @@ var ImageController = {
         });
 
         // Run tasks
-        async.parallel(tasks, function (err, results) {
+        async.parallel(tasks, function (err) {
             cb(err);
         });
     },
@@ -103,8 +101,10 @@ var ImageController = {
             if (cb)
                 if (err)
                     cb(err);
-                else
-                    cb(null, merge({matrix: result}, image));
+                else {
+                    image.matrix = result;
+                    cb(null, image);
+                }
         });
     }
 };
