@@ -11,8 +11,7 @@ define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Ra
                 name: '',
                 height: 0,
                 width: 0,
-                locked: false,
-                matrix: []
+                locked: false
             },
 
             urlRoot: config.api + '/image',
@@ -26,6 +25,12 @@ define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Ra
 
             parse: function (data) {
                 if (data.err) this.err(data.err);
+
+                // Don't save matrix as a attribute, but as a property, so it does not get printed to html
+                if(data && data.result && data.result.matrix){
+                    this.matrix = data.result.matrix;
+                    delete data.result.matrix;
+                }
 
                 return data.result;
             },
