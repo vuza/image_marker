@@ -11,6 +11,8 @@ winston.cli();
 winston.level = config.logging.level;
 winston.add(winston.transports.File, { filename: config.logging.location + '/' + config.logging.fileName });
 
+winston.info('Starting server...');
+
 /**
  * Load images
  */
@@ -31,6 +33,6 @@ imageController.loadImages(function(err){
     server.use('/api/v1/', router);
 
     server.listen(config.listenPort, function(){
-        winston.info('Start listening at ' + config.listenPort);
+        winston.info('Started listening at ' + config.listenPort);
     });
 });
