@@ -4,13 +4,16 @@ var fs = require('fs'),
     Image = require('./../models/Image'),
     mkdirp = require('mkdirp'),
     config = require('./../config'),
-    wiston = require('winston'),
+    winston = require('winston'),
     async = require('async'),
+    d3 = require('d3'),
+    document = require('jsdom').jsdom(),
+    extend = require('util')._extend,
     images = {};
 
 var ImageController = {
     getRandomUnlockedImage: function (req, res) {
-        wiston.verbose('Get a random unlocked image');
+        winston.verbose('Get a random unlocked image');
 
         var image = null;
 
@@ -26,26 +29,26 @@ var ImageController = {
         });
 
         if (image) {
-            res.status(200).send({err: null, result: image});
+            res.status(200).send({err: null, result: ImageController.getImageWithoutMatrix(image)});
         } else {
-            wiston.debug('No unlocked image found');
+            winston.debug('No unlocked image found');
             res.status(200).send({err: {msg: 'No unlocked image found', code: 0}, result: null});
         }
     },
 
     getImage: function (req, res) {
         var image = images[req.params['name']];
-        wiston.verbose('Get image: ' + image);
+        winston.verbose('Get image: ' + image);
 
         if (image) {
             image.locked = true;
-            res.status(200).send({err: null, result: image});
+            res.status(200).send({err: null, result: ImageController.getImageWithoutMatrix(image)});
         } else
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
 
     loadImages: function (cb) {
-        wiston.debug('Load images');
+        winston.debug('Load images');
 
         var i = 0;
         try {
@@ -106,6 +109,65 @@ var ImageController = {
                     cb(null, image);
                 }
         });
+    },
+
+    getImageWithoutMatrix: function(image){
+        extend({}, image);
+        delete image.matrix;
+
+        return image;
+    },
+
+    createSvg: function(image, cb){
+        //TODO finish implementation when receiving correct matrix
+
+        winston.debug('create svg');
+
+        // create the svg
+        var svg = d3.select(document.body).append("svg")
+            .attr('width', image.width)
+            .attr('height', image.height);
+
+        svg.append('g');
+
+        // add the image
+        var defs = svg.append("defs");
+
+        defs.append('pattern')
+            .attr('id', 'image')
+            .attr('patternUnits', 'userSpaceOnUse')
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .append('image')
+            .attr('width', image.width)
+            .attr('height', image.height);
+
+        svg.append('rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .attr('fill', 'url(#image)');
+
+        winston.debug('create dots at svg');
+
+        svg.selectAll('.dot')
+            .data(image.matrix.data)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('r', 1)
+            .attr('cx', function(d) { return d.x; })
+            .attr('cy', function(d) { return d.y; })
+            .style('fill', function(){
+                return randomColor({
+                    format: 'hex'
+                });
+            })
+            .attr('fill-opacity', function(){
+                return Math.random() * (1 - 0.2) + 0.2;
+            });
+
+        if(cb) cb(null, d3.select(document.body).html());
     }
 };
 
