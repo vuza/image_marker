@@ -13,6 +13,92 @@
  */
 Im_processor_api::Im_processor_api() { }
 
+std::string Im_processor_api::getImageMatrix(std::string imgPath)
+{
+    init();
+    loadImage(imgPath);
+    return createImgMatrix();
+}
+
+std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int label)
+{
+    init();
+    loadImage(imgPath);
+
+    if (label == label_names.size()-1) label=255;
+
+    if (image_labels(y,x)!=label)
+    {
+        int mcnt = image_mask(y,x) + 1;
+
+        int width = image_labels.cols;
+        int height = image_labels.rows;
+
+        image_mask(y,x) = mcnt;
+
+        int queue_idx = 0;
+        std::vector<cv::Point2i> queue;
+        queue.resize(1);
+        queue[0] = cv::Point2i(x,y);
+
+        image_labels(y,x) = label;
+        int la = spc_labels(y,x);
+
+        // start clustering
+        while (queue_idx < ((int)queue.size()))
+        {
+            // extract current index
+            cv::Point2i &point = queue.at(queue_idx);
+            queue_idx++;
+
+            for(int v=point.y-1; v<=point.y+1; v++)
+            {
+                for (int u=point.x-1; u<=point.x+1; u++)
+                {
+                    if ( (v < 0) || (u < 0) || (v >= height) || (u >= width) )
+                        continue;
+
+                    int idx = v*width + u;
+
+                    // not valid or not used point
+                    if (image_mask(idx)==mcnt)
+                        continue;
+
+                    // we can add this point to the plane
+                    if ( la==spc_labels(idx) )
+                    {
+                        queue.push_back(cv::Point2i(u,v));
+                        image_labels(idx) = label;
+                        image_mask(idx) = mcnt;
+                    }
+                }
+            }
+        }
+        saveImg();
+    }
+
+    return createImgMatrix();
+}
+
+std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int label)
+{
+    init();
+    loadImage(imgPath);
+
+    for (int v=0; v<image_labels.rows; v++)
+    {
+        for (int u=0; u<image_labels.cols; u++)
+        {
+            if (image_labels(v,u)==255)
+            {
+                image_labels(v,u) = label;
+            }
+        }
+    }
+    saveImg();
+    return createImgMatrix();
+}
+
 /**
  * inits the program
  */
@@ -77,92 +163,6 @@ void Im_processor_api::loadImage(string imgPath)
     spc.operate(clusters);
 
     spc.getLabelMap(clusters, spc_labels);
-}
-
-std::string Im_processor_api::getImageMatrix(std::string imgPath)
-{
-    init();
-    loadImage(imgPath);
-    return createImgMatrix();
-}
-
-std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int label)
-{
-    init();
-    loadImage(imgPath);
-
-    if (label == label_names.size()-1) label=255;
-
-    if (image_labels(y,x)!=label)
-    {
-        //mcnt++;
-        int mcnt = 0;
-
-        int width = image_labels.cols;
-        int height = image_labels.rows;
-
-        image_mask(y,x) = mcnt;
-
-        int queue_idx = 0;
-        std::vector<cv::Point2i> queue;
-        queue.reserve(1);
-        queue[0] = cv::Point2i(x,y);
-
-        image_labels(y,x) = label;
-        int la = spc_labels(y,x);
-
-        // start clustering
-        while (queue_idx < ((int)queue.size()))
-        {
-            // extract current index
-            cv::Point2i &point = queue.at(queue_idx);
-            queue_idx++;
-
-            for(int v=point.y-1; v<=point.y+1; v++)
-            {
-                for (int u=point.x-1; u<=point.x+1; u++)
-                {
-                    if ( (v < 0) || (u < 0) || (v >= height) || (u >= width) )
-                        continue;
-
-                    int idx = v*width + u;
-
-                    // not valid or not used point
-                    if (image_mask(idx)==mcnt)
-                        continue;
-
-                    // we can add this point to the plane
-                    if ( la==spc_labels(idx) )
-                    {
-                        queue.push_back(cv::Point2i(u,v));
-                        image_labels(idx) = label;
-                        image_mask(idx) = mcnt;
-                    }
-                }
-            }
-        }
-    }
-    saveImg();
-    return createImgMatrix();
-}
-
-std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int label)
-{
-    init();
-    loadImage(imgPath);
-
-    for (int v=0; v<image_labels.rows; v++)
-    {
-        for (int u=0; u<image_labels.cols; u++)
-        {
-            if (image_labels(v,u)==255)
-            {
-                image_labels(v,u) = label;
-            }
-        }
-    }
-    saveImg();
-    return createImgMatrix();
 }
 
 std::string Im_processor_api::createImgMatrix()
