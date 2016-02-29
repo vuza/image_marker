@@ -2,7 +2,11 @@
 // Created by andreas on 09.01.16.
 //
 
+#include <opencv2/highgui/highgui_c.h>
 #include "im_processor_api.h"
+#include "FilesystemUtils.hh"
+#include "ColorMap.hpp"
+#include <boost/algorithm/string.hpp>
 
 /**
  * empty constructor
@@ -34,14 +38,29 @@ void Im_processor_api::initLabelNames()
     //last_label = label_names.size()-1;
 }
 
-void Im_processor_api::loadImage(string imgName)
+void Im_processor_api::loadImage(string imgPath)
 {
-    string pathToImage = image_directory + imgName;
-    image = cv::imread(image_directory + imgName, CV_LOAD_IMAGE_COLOR);
+    vector<string> imgPathSplitted;
+    boost::split(imgPathSplitted, imgPath, boost::is_any_of("/"));
+    string imgNameWithFileFormat = imgPathSplitted.back();
 
-    string labelName = "label_" + imgName.substr(0, imgName.length() - image_ext.length()) + label_ext;
-    string pathToLabel = label_directory + labelName;
-    image_labels = cv::imread(label_directory + labelName, CV_LOAD_IMAGE_GRAYSCALE);
+    vector<string> imgNameSplitted;
+    boost::split(imgNameSplitted, imgNameWithFileFormat, boost::is_any_of("."));
+    assert(imgNameSplitted.size() == 3); //ex. image.1.jpg
+
+    image_name = imgNameSplitted[0] + "." + imgNameSplitted[1];
+
+    string labelImgPath = "";
+    for(int i = 1; i < imgPathSplitted.size() - 1; i++)
+    {
+        labelImgPath += "/" + imgPathSplitted.at(i);
+    }
+
+    labelImgPath += "/" + image_name + "." + label_ext;
+    std::cout << labelImgPath << std::endl;
+
+    image = cv::imread(imgPath, CV_LOAD_IMAGE_COLOR);
+    image_labels = cv::imread(labelImgPath, CV_LOAD_IMAGE_GRAYSCALE);
 
     if(image_labels.empty() || image.size() != image_labels.size())
         image_labels = cv::Mat_<unsigned char>::ones(image.rows, image.cols)*255;
@@ -58,33 +77,34 @@ void Im_processor_api::loadImage(string imgName)
     spc.getLabelMap(clusters, spc_labels);
 }
 
-std::string Im_processor_api::getImageMatrix(std::string imgName)
+std::string Im_processor_api::getImageMatrix(std::string imgPath)
 {
 
     init();
-    loadImage(imgName);
+    loadImage(imgPath);
 
     string result = "";
     string label_test = "";
 
-    result += "{\"imgName\":\"" + imgName + "\",";
+    result += "{\"imgPath\":\"" + imgPath + "\",";
         result += "\"width\":" + to_string(image.rows) + ",";
         result += "\"height\":" + to_string(image.cols) + ",";
 
-        result += "\"data\":[{";
+        result += "\"data\":[";
             for(int x = 0; x < image.rows; x++)
             {
                 for(int y = 0; y < image.cols; y++)
                 {
-                    result+= "x:" + to_string(x) + ",";
-                    result+= "y:" + to_string(y) + ",";
+                    result += "{";
+                    result+= "\"x\":" + to_string(x) + ",";
+                    result+= "\"y\":" + to_string(y) + ",";
 
                     //calculate label from greyColor
                     int label = jvis::getLabel(image_labels(y,x));
                     label_test += to_string(label) + ",";
-                    result+= "label:" + to_string(label) + ",";
+                    result+= "\"label\":" + to_string(label) + ",";
 
-                    result+= "isContour: false" + "},"; //TODO check if true or false
+                    result+= "\"isContour\": false" + string("},"); //TODO check if true or false
                 }
             }
             result = result.substr(0, result.length()-1); //remove last ","
