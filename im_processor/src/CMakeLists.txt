@@ -3,7 +3,7 @@
 
   #SET(OpenCV_DIR "/home/andreas/opencv-2.4.9/build")
 
-  PROJECT(ImageLabelling)
+  PROJECT(main_test_im_processor_api)
 
   FIND_PACKAGE (OpenCV)
   include_directories(${OpenCV_INCLUDE_DIRS})

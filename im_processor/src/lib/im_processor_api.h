@@ -27,19 +27,19 @@ public:
     * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
     */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string getImageMatrix(std::string imgName);
+    std::string getImageMatrix(std::string imgPath);
 
     /**
      * fills the segment around the x and y coordinate with the given label
      */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string fillSegment(std::string imgName, std::string imgMatrix, int x, int y, int label);
+    std::string fillSegment(std::string imgPath, std::string imgMatrix, int x, int y, int label);
 
     /**
      * fills all unlabeledSegments with the given label
      */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string fillAllUnlabeledSegments(std::string imgName, std::string imgMatrix, int label);
+    std::string fillAllUnlabeledSegments(std::string imgPath, std::string imgMatrix, int label);
 
 private:
     void init();
@@ -48,12 +48,10 @@ private:
 
     vector<string> label_names;
 
-    string image_directory = "/media/andreas/Data/git/image_marker/test_images/";
-    string image_name = "image";
+    string image_name;
     string image_ext = "jpg";
 
-    string label_directory = "/media/andreas/Data/git/image_marker/test_images/labels/";
-    string label_name = "labels";
+    string label_name;
     string label_ext = "png";
 
     cv::Mat_<cv::Vec3b> image;
