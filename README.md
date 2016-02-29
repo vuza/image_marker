@@ -81,7 +81,13 @@ Install stuff ...
 ### ansible
 App can be deployed through ansible, run:
 ```
-ansible-playbook deployment/playbook.yml --ask-pass --ask-sudo -u <your-user>
+ansible-playbook deployment/playbook.yml -u <your-user>
 ```
-You can omit the -u parameter if your local user is equal to remote user at alagoda.at 
+You can omit the -u parameter if your local user is equal to remote user at alagoda.at, ansible will always ask you for sudo and ssh password.
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
+
+## Guidelines
+### Error Codes
+- 0: 'No unlocked image found'
+- 1: 'Could no load image matrix'
+- 2: 'Image [name] not found'

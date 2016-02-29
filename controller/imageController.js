@@ -3,6 +3,8 @@ var fs = require('fs'),
     merge = require('merge'),
     im_processor = require('./../im_processor/build/Release/im_processor'),
     Image = require('./../models/Image'),
+    mkdirp = require('mkdirp'),
+    config = require('./../config'),
     images = {};
 
 var ImageController = {
@@ -43,20 +45,35 @@ var ImageController = {
                 }
             });
         else
-            res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 0}, result: null});
+            res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
 
     loadImages: function () {
         var i = 0;
-        fs.readdirSync('./public/images').forEach(function (file) {
-            if(!fs.lstatSync('./public/images/' + file).isDirectory()){
-                var dim = sizeOf('./public/images/' + file);
+        try{
+            fs.readdirSync(config.imageLocation).forEach(function (file) {
+                var image = config.imageLocation + '/' + file;
+                if(!fs.lstatSync(image).isDirectory()){
+                    var dim = sizeOf(image);
 
-                images[file] = new Image(file, false, dim['width'], dim['height']);
+                    images[file] = new Image(file, false, dim['width'], dim['height']);
 
-                i++;
+                    i++;
+                }
+            });
+        } catch(e){
+            // There is no image folder, create it
+
+            try{
+                mkdirp.sync(config.imageLocation);
+            } catch(e){
+                // Could not create image folder, return false
+
+                return false;
             }
-        });
+        }
+
+        return true;
     },
 
     loadMatrix: function (image, cb) {

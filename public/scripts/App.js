@@ -1,7 +1,8 @@
 define(['Marionette'], function(Marionette){
     var App = Marionette.Application.extend({
         regions: {
-            mainRegion: '#mainRegion'
+            mainRegion: '#mainRegion',
+            errorRegion: '#errorRegion'
         }
     });
 

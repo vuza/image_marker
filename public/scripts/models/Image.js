@@ -1,8 +1,9 @@
-define(['models/Model', 'socketio'], function (Model, socketio) {
+define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Radio'], function (Model, socketio, config, errorController, Radio) {
     var socket,
+        routerChannel = Radio.channel('router'),
         Image = Model.extend({
             initialize: function () {
-                socket = socketio('http://localhost:3000'); //TODO set in config
+                socket = socketio(config.socket);
                 this.on('change:locked', this.updateLockstatus, this);
             },
 
@@ -14,7 +15,7 @@ define(['models/Model', 'socketio'], function (Model, socketio) {
                 matrix: []
             },
 
-            urlRoot: 'http://localhost:3991/api/v1/image',
+            urlRoot: config.api + '/image',
 
             url: function () {
                 if (this.get('name') && this.get('name') != '')
@@ -30,7 +31,10 @@ define(['models/Model', 'socketio'], function (Model, socketio) {
             },
 
             err: function (err) {
-                console.log('oh we got an error, see: ' + JSON.stringify(err)); //TODO implement proper error handling
+                if(err.code == 0)
+                    routerChannel.trigger('navigate', 'overview'); // "No unlocked image found" ==> load overview!
+                else
+                    errorController.show('Error while parsing image response from server, error: ' + JSON.stringify(err));
             },
 
             updateLockstatus: function () {

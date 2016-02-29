@@ -1,27 +1,45 @@
 ---
 - hosts: all
+  vars_files:
+    - vars/all.yml
+  remote_user: "{{ remote_user }}"
   tasks:
 
   - name: Create directory for app
-    file: path=/var/node/image_marker state=directory
+    become: True
+    file: path={{ root }} state=directory owner={{ remote_user }} group=www-data
+
+  - name: Create logging directory
+    become: True
+    file: path={{ loggingLocation }} state=directory owner={{ remote_user }}
 
   - name: checkout repo
-    git: repo=git@github.com:vuza/image_marker.git dest=/var/node/image_marker force=yes accept_hostkey=True version=develop
+    git: repo={{ git }} dest={{ root }} force=yes accept_hostkey=True version={{ gitVersion }}
 
   - name: install backend/npm dependencies
-    npm: path=/var/node/image_marker
+    npm: path={{ root }}
 
   - name: install im_processor
-    npm: path=/var/node/image_marker/im_processor
+    npm: path={{ root }}/im_processor
 
   - name: install frontend/bower dependencies
-    bower: path=/var/node/image_marker
+    bower: path={{ root }}
 
-  - name: Check list of Node.js apps running
-    command: forever list
-    register: forever_list
-    changed_when: false
+  - name: replace frontend config (1)
+    replace:
+      dest={{ root }}/public/scripts/config.js
+      regexp="api:(.*)"
+      replace="api:'http://alagoda.at:3991/api/v1',"
+
+  - name: replace frontend config (2)
+    replace:
+      dest={{ root }}/public/scripts/config.js
+      regexp="socket:(.*)"
+      replace="socket:'http://alagoda.at:3000',"
+
+  - name: Stop Node.js app
+    command: forever stop {{ root }}/server.js
+    ignore_errors: yes # Says it did not work, but it works!
 
   - name: Start Node.js app
-    command: forever start /var/node/image_marker
-    when: "forever_list.stdout.find('/var/node/image_marker') == -1"
+    command: forever start -al {{ loggingLocation }}/forever.log {{ root }}/server.js

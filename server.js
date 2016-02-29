@@ -1,11 +1,23 @@
 var router = require('./router'),
     imageController = require('./controller/imageController'),
+    config = require('./config'),
+    winston = require('winston'),
     server = require('express')();
+
+/**
+ * Set up logging
+ */
+winston.cli();
+winston.level = config.logging.level;
+winston.add(winston.transports.File, { filename: config.logging.location + '/' + config.logging.fileName });
 
 /**
  * Load images
  */
-imageController.loadImages();
+if(!imageController.loadImages()){
+    winston.error('Could not find or create image folder');
+    return; // Stop program
+}
 
 /**
  * Init and start server
