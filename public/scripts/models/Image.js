@@ -1,7 +1,7 @@
-define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Radio'], function (Model, socketio, config, errorController, Radio) {
+define(['socketio', 'config', 'controllers/ErrorController', 'Radio'], function (socketio, config, errorController, Radio) {
     var socket,
         routerChannel = Radio.channel('router'),
-        Image = Model.extend({
+        Image = Backbone.Model.extend({
             initialize: function () {
                 socket = socketio(config.socket);
                 this.on('change:locked', this.updateLockstatus, this);
@@ -11,16 +11,16 @@ define(['models/Model', 'socketio', 'config', 'controllers/ErrorController', 'Ra
                 name: '',
                 height: 0,
                 width: 0,
-                locked: false
+                locked: true
             },
 
             urlRoot: config.api + '/image',
 
             url: function () {
                 if (this.get('name') && this.get('name') != '')
-                    return this.urlRoot + '/' + this.get('name');
+                    return this.urlRoot + '/' + this.get('name') + '/' + this.get('locked');
 
-                return this.urlRoot;
+                return this.urlRoot + '/' + this.get('locked');
             },
 
             parse: function (data) {

@@ -108,3 +108,4 @@ server {
 ### Exploited Errors
 - 0: 'No unlocked image found'
 - 2: 'Image [name] not found'
+- 3: 'No images found at all'

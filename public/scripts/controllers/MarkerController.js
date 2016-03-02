@@ -1,19 +1,17 @@
 define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], function (Marionette, MarkerView, Image, async, Radio) {
     var uiChannel,
+        markerChannel,
         MarkerController = Marionette.Object.extend({
             initialize: function () {
                 uiChannel = Radio.channel('uiChannel');
                 markerChannel = Radio.channel('markerChannel');
 
-                uiChannel.on('click:#nextImage', this.showRandomUnlockedImage);
+                uiChannel.on('click:#nextImage', this.showRandomUnlockedImage); //TODO außer wir wechseln dann zur Übersicht --> zentralisieren!
             },
 
-            show: function(region){
+            showRandomUnlockedImage: function (region) {
                 MarkerController.region = region;
-                this.showRandomUnlockedImage();
-            },
 
-            showRandomUnlockedImage: function () {
                 var image = new Image();
 
                 async.waterfall([

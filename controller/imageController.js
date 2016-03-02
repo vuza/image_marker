@@ -14,13 +14,16 @@ var fs = require('fs'),
 var ImageController = {
     getRandomUnlockedImage: function (req, res) {
         winston.verbose('Get a random unlocked image');
+        var lock = (req.params['lock'] == 'true');
 
         var image = null;
 
         Object.keys(images).every(function (name) {
             if (!images[name].locked) {
                 image = images[name];
-                image.locked = true;
+
+                if(lock)
+                    image.locked = true;
 
                 return false;
             }
@@ -37,14 +40,38 @@ var ImageController = {
     },
 
     getImage: function (req, res) {
-        var image = images[req.params['name']];
+        var image = images[req.params['name']],
+            lock = (req.params['lock'] == 'true');
+
         winston.verbose('Get image: ' + image);
 
         if (image) {
-            image.locked = true;
+            if(lock)
+                image.locked = true;
+
             res.status(200).send({err: null, result: ImageController.getImageWithoutMatrix(image)});
         } else
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
+    },
+
+    getImages: function(req, res){
+        winston.verbose('Getting images');
+
+        var lock = (req.params['lock'] == 'true');
+
+        var tmp_images = [];
+
+        Object.keys(images).every(function (name) {
+            tmp_images.push(ImageController.getImageWithoutMatrix(images[name]));
+
+            return true;
+        });
+
+        if(tmp_images.length > 0){
+            res.status(200).send({err: null, result: tmp_images});
+        } else{
+            res.status(200).send({err: {msg: 'No images found at all', code: 3}, result: null});
+        }
     },
 
     loadImages: function (cb) {

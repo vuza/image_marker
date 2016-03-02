@@ -16,20 +16,21 @@ define(['Marionette'], function (Marionette) {
                         app.mainRegion.show(imageNavigationLayout);
 
                         // Load Marker to image
-                        markerController.show(imageNavigationLayout.getRegion('image'));
+                        markerController.showRandomUnlockedImage(imageNavigationLayout.getRegion('image'));
 
                         // Load Navigation to navigation
-                        navigationController.show(imageNavigationLayout.getRegion('navigation'));
+                        navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
                     });
                 },
 
                 'overview': function () {
-                    require(['layouts/ImagesOverviewLayout'], function(ImagesOverviewLayout){
+                    require(['layouts/ImagesOverviewLayout', 'controllers/OverviewController'], function(ImagesOverviewLayout, overviewController){
                         // Create layout and render to main section
                         var imagesOverviewLayout = new ImagesOverviewLayout();
                         app.mainRegion.show(imagesOverviewLayout);
 
                         // Load images and render to layout
+                        overviewController.showAllImages();
 
                         // Load navigation
                     });
