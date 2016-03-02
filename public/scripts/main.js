@@ -36,7 +36,7 @@ require.config({
 
         Radio.channel('router')
             .on('navigate', function (to) {
-                router.navigate(to);
+                router.navigate(to, {trigger: true});
             });
     }
 });

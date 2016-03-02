@@ -86,6 +86,24 @@ ansible-playbook deployment/playbook.yml -u <your-user>
 You can omit the -u parameter if your local user is equal to remote user at alagoda.at, ansible will always ask you for sudo and ssh password.
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
 
+### Nginx Setup
+We use ngnix for serving static frontend files. Make sure html push-state URLs work properly. Example nginx setup:
+```server {
+        listen 80;
+        listen [::]:80;
+        
+        server_name im.localhost;
+
+        location / {
+                root /home/marlon/Documents/Bac/prototype/public/;
+                index index.html;
+
+                if (!-e $request_filename){
+                        rewrite ^(.*)$ /index.html break;
+                }
+        }
+}```
+
 ## Guidelines
 ### Exploited Errors
 - 0: 'No unlocked image found'

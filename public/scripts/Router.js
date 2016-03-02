@@ -24,7 +24,15 @@ define(['Marionette'], function (Marionette) {
                 },
 
                 'overview': function () {
-                    console.log('welcome to overview');
+                    require(['layouts/ImagesOverviewLayout'], function(ImagesOverviewLayout){
+                        // Create layout and render to main section
+                        var imagesOverviewLayout = new ImagesOverviewLayout();
+                        app.mainRegion.show(imagesOverviewLayout);
+
+                        // Load images and render to layout
+
+                        // Load navigation
+                    });
                 }
             }
         });

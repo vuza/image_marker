@@ -1,6 +1,6 @@
 var fs = require('fs'),
     sizeOf = require('image-size'),
-    im_processor = require('./../im_processor/build/Release/im_processor'),
+    //im_processor = require('./../im_processor/build/Release/im_processor'),
     Image = require('./../models/Image'),
     mkdirp = require('mkdirp'),
     config = require('./../config'),
@@ -100,7 +100,7 @@ var ImageController = {
     },
 
     loadMatrix: function (image, cb) {
-        im_processor.getImageMatrix(image.name, function (err, result) {
+        /*im_processor.getImageMatrix(image.name, function (err, result) {
             if (cb)
                 if (err)
                     cb(err);
@@ -108,7 +108,9 @@ var ImageController = {
                     image.matrix = result;
                     cb(null, image);
                 }
-        });
+        });*/
+
+        cb(null, image); //TODO use im_processor again
     },
 
     getImageWithoutMatrix: function(image){
