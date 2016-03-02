@@ -88,21 +88,21 @@ The script installs the app at alagoda.at, the frontend is reachable via im.alag
 
 ### Nginx Setup
 We use ngnix for serving static frontend files. Make sure html push-state URLs work properly. Example nginx setup:
-```server {
-        listen 80;
-        listen [::]:80;
-        
-        server_name im.localhost;
 
-        location / {
-                root /home/marlon/Documents/Bac/prototype/public/;
-                index index.html;
-
-                if (!-e $request_filename){
-                        rewrite ^(.*)$ /index.html break;
-                }
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name im.localhost;
+    location / {
+        root /home/marlon/Documents/Bac/prototype/public/;
+        index index.html;
+        if (!-e $request_filename){
+            rewrite ^(.*)$ /index.html break;
         }
-}```
+    }
+}
+```
 
 ## Guidelines
 ### Exploited Errors
