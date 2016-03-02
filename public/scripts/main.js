@@ -28,7 +28,7 @@ require.config({
         // Start App
         app.start();
 
-        // Reply requests via Radio
+        /** Reply to requests via Radio; Control program from here */
         Radio.channel('regionsChannel')
             .reply('errorRegion', function () {
                 return app.getRegion('errorRegion');
@@ -37,6 +37,14 @@ require.config({
         Radio.channel('router')
             .on('navigate', function (to) {
                 router.navigate(to, {trigger: true});
+            });
+
+        Radio.channel('uiChannel')
+            .on('click:#nextImage', router.showRandomUnlockedImage);
+
+        Radio.channel('controllerChannel')
+            .on('noUnlockedImageFound', function(){
+                router.navigate('overview', {trigger: true});
             });
     }
 });

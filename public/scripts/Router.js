@@ -9,19 +9,7 @@ define(['Marionette'], function (Marionette) {
              * Routes, can be accessed via ..router.navigate(route, options)
              */
             routes: {
-                '': function () {
-                    require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
-                        // Create layout and render to main section
-                        var imageNavigationLayout = new ImageNavigationLayout();
-                        app.mainRegion.show(imageNavigationLayout);
-
-                        // Load Marker to image
-                        markerController.showRandomUnlockedImage(imageNavigationLayout.getRegion('image'));
-
-                        // Load Navigation to navigation
-                        navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
-                    });
-                },
+                '': 'showRandomUnlockedImage',
 
                 'overview': function () {
                     require(['layouts/ImagesOverviewLayout', 'controllers/OverviewController'], function(ImagesOverviewLayout, overviewController){
@@ -35,6 +23,20 @@ define(['Marionette'], function (Marionette) {
                         // Load navigation
                     });
                 }
+            },
+
+            showRandomUnlockedImage: function(){
+                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
+                    // Create layout and render to main section
+                    var imageNavigationLayout = new ImageNavigationLayout();
+                    app.mainRegion.show(imageNavigationLayout);
+
+                    // Load Marker to image
+                    markerController.showRandomUnlockedImage(imageNavigationLayout.getRegion('image'));
+
+                    // Load Navigation to navigation
+                    navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
+                });
             }
         });
 

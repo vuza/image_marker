@@ -1,20 +1,13 @@
 define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], function (Marionette, MarkerView, Image, async, Radio) {
-    var uiChannel,
-        markerChannel,
+    var controllerChannel = Radio.channel('controllerChannel'),
         MarkerController = Marionette.Object.extend({
-            initialize: function () {
-                uiChannel = Radio.channel('uiChannel');
-                markerChannel = Radio.channel('markerChannel');
-
-                uiChannel.on('click:#nextImage', this.showRandomUnlockedImage); //TODO außer wir wechseln dann zur Übersicht --> zentralisieren!
-            },
-
             showRandomUnlockedImage: function (region) {
                 MarkerController.region = region;
 
                 var image = new Image();
 
                 async.waterfall([
+                    // Load image
                     function (cb) {
                         image.fetch({
                             success: function (image) {
@@ -22,9 +15,17 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
                             }
                         });
                     },
+                    // Check if got image from server
+                    function(image, cb){
+                        if(image.get('name') == '')
+                            controllerChannel.trigger('noUnlockedImageFound');
+
+                        cb(null, image);
+                    },
+                    // Show image
                     function (image, cb) {
                         MarkerController.region.show(new MarkerView(image));
-                        cb();
+                        cb(null);
                     }
                 ]);
             }

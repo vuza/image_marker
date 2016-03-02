@@ -1,6 +1,5 @@
-define(['socketio', 'config', 'controllers/ErrorController', 'Radio'], function (socketio, config, errorController, Radio) {
-    var socket,
-        routerChannel = Radio.channel('router'),
+define(['socketio', 'config', 'controllers/ErrorController'], function (socketio, config, errorController) {
+    var socket
         Image = Backbone.Model.extend({
             initialize: function () {
                 socket = socketio(config.socket);
@@ -11,16 +10,17 @@ define(['socketio', 'config', 'controllers/ErrorController', 'Radio'], function 
                 name: '',
                 height: 0,
                 width: 0,
-                locked: true
+                locked: false
             },
 
             urlRoot: config.api + '/image',
 
             url: function () {
+                // last param true, to get locked image
                 if (this.get('name') && this.get('name') != '')
-                    return this.urlRoot + '/' + this.get('name') + '/' + this.get('locked');
+                    return this.urlRoot + '/' + this.get('name') + '/true';
 
-                return this.urlRoot + '/' + this.get('locked');
+                return this.urlRoot + '/true';
             },
 
             parse: function (data) {
@@ -30,9 +30,7 @@ define(['socketio', 'config', 'controllers/ErrorController', 'Radio'], function 
             },
 
             err: function (err) {
-                if(err.code == 0)
-                    routerChannel.trigger('navigate', 'overview'); // "No unlocked image found" ==> load overview!
-                else
+                if(err.code != 0) // "No unlocked image found" ==> that is not a error we want to handle here
                     errorController.show('Error while parsing image response from server, error: ' + JSON.stringify(err));
             },
 
