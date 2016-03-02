@@ -12,7 +12,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "RecursiveSuperpixelClustering.hh"
 #include "Slic.h"
-#include "ColorMap.hpp"
 
 #include <string>
 #include <vector>
@@ -26,36 +25,63 @@ public:
 
     /**
     * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
+    * @param imgPath path to image
+    * @return imgMatrix in JSON format
     */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string getImageMatrix(std::string imgName);
+    std::string getImageMatrix(std::string imgPath);
 
     /**
      * fills the segment around the x and y coordinate with the given label
+     * @param imgPath path to image
+     * @param label the label to fill the segment with
+     * @return imgMatrix in JSON format
      */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string fillSegment(std::string imgName, std::string imgMatrix, int x, int y, int label);
+    std::string fillSegment(std::string imgPath, int x, int y, int label);
 
     /**
      * fills all unlabeledSegments with the given label
+     * @param imgPath path to image
+     * @param label the label to fill the segments with
+     * @return imgMatrix in JSON format
      */
     //TODO pass args: superpixel compactness, superpixel size
-    std::string fillAllUnlabeledSegments(std::string imgName, std::string imgMatrix, int label);
+    std::string fillAllUnlabeledSegments(std::string imgPath, int label);
 
 private:
+
     void init();
-    void initLabelNames();
-    void loadImage(std::string imgName);
+
+    void initLabelNames(); //TODO do we need label names in api?
+    /**
+     * loads the given image and its label image into image and image_labels
+     * saves the imgPath into image_path
+     * @param imgPath path to image
+     */
+    void loadImage(std::string imgPath);
+
+    /**
+     * creates the image matrix in JSON format
+     * Precondition: execute init() and loadImage() methods before
+     * @param imgPath path to image
+     * @return imgMatrix in JSON format
+     */
+    std::string createImgMatrix();
+    /**
+     * saves the loaded image and its label file to directory
+     * @return true if successfully saved
+     */
+    bool saveImg();
 
     vector<string> label_names;
 
-    string image_directory = "/home/marlon/Documents/Bac/prototype/public/images/";
-    string image_name = "image";
-    string image_ext = "jpg";
+    string image_path;
+    string image_name;
+    //string image_ext = "jpg";
 
-    string label_directory = "/home/marlon/Documents/Bac/prototype/public/images/labels/";
-    string label_name = "labels";
-    string label_ext = "png";
+    string image_labels_path;
+    string image_labels_ext = "png";
 
     cv::Mat_<cv::Vec3b> image;
     cv::Mat_<unsigned char> image_labels;
