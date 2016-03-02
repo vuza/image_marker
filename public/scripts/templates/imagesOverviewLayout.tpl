@@ -1,2 +1,2 @@
-<section id="images"></section>
+<section id="overview"></section>
 <section id="navigation"></section>

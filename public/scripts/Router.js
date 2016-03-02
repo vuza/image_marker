@@ -11,18 +11,7 @@ define(['Marionette'], function (Marionette) {
             routes: {
                 '': 'showRandomUnlockedImage',
 
-                'overview': function () {
-                    require(['layouts/ImagesOverviewLayout', 'controllers/OverviewController'], function(ImagesOverviewLayout, overviewController){
-                        // Create layout and render to main section
-                        var imagesOverviewLayout = new ImagesOverviewLayout();
-                        app.mainRegion.show(imagesOverviewLayout);
-
-                        // Load images and render to layout
-                        overviewController.showAllImages();
-
-                        // Load navigation
-                    });
-                }
+                'overview': 'showImageOverview'
             },
 
             showRandomUnlockedImage: function(){
@@ -36,6 +25,20 @@ define(['Marionette'], function (Marionette) {
 
                     // Load Navigation to navigation
                     navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
+                });
+            },
+
+            showImageOverview: function () {
+                require(['layouts/ImagesOverviewLayout', 'controllers/OverviewController'], function(ImagesOverviewLayout, overviewController){
+                    // Create layout and render to main section
+                    var imagesOverviewLayout = new ImagesOverviewLayout();
+                    app.mainRegion.show(imagesOverviewLayout);
+
+                    // Load images and render to layout
+                    overviewController.showAllImages(imagesOverviewLayout.getRegion('overview'));
+
+                    // Load navigation
+                    //TODO
                 });
             }
         });

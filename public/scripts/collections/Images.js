@@ -1,4 +1,4 @@
-define(['backbone', 'models/Image', 'config'], function(Backbone, Image, config){
+define(['backbone', 'models/Image', 'config', 'underscore'], function(Backbone, Image, config, _){
     var Images = Backbone.Collection.extend({
         model: Image,
 
@@ -10,7 +10,14 @@ define(['backbone', 'models/Image', 'config'], function(Backbone, Image, config)
 
         parse: function(data){
             if(data.err) this.err(data.err);
-            return data.result;
+
+            var images = [];
+            _.each(data.result, function(imageData){
+                var image = new Image(imageData);
+                images.push(image);
+            });
+
+            return images;
         }
     });
 

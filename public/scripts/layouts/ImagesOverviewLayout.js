@@ -3,7 +3,7 @@ define(['Marionette', 'tpl!templates/imagesOverviewLayout.tpl'], function(Marion
         template: imagesOverviewLayout,
 
         regions: {
-            images: '#images',
+            overview: '#overview',
             navigation: '#navigation'
         }
     });
