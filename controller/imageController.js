@@ -1,12 +1,13 @@
 var fs = require('fs'),
     sizeOf = require('image-size'),
-    //im_processor = require('./../im_processor/build/Release/im_processor'),
+    im_processor = require('./../im_processor/build/Release/im_processor'),
     Image = require('./../models/Image'),
     mkdirp = require('mkdirp'),
     config = require('./../config'),
     winston = require('winston'),
     async = require('async'),
     d3 = require('d3'),
+    path = require('path'),
     document = require('jsdom').jsdom(),
     extend = require('util')._extend,
     images = {};
@@ -79,12 +80,12 @@ var ImageController = {
 
         var i = 0;
         try {
-            fs.readdirSync(config.imageLocation).forEach(function (file) {
-                var path = config.imageLocation + '/' + file;
-                if (!fs.lstatSync(path).isDirectory()) {
-                    var dim = sizeOf(path);
+            fs.readdirSync(config.images.relativeLocation).forEach(function (file) {
+                var imagePath = path.join(config.images.absoluteLocation, file);
+                if (!fs.lstatSync(imagePath).isDirectory()) {
+                    var dim = sizeOf(imagePath);
 
-                    images[file] = new Image(file, false, dim['width'], dim['height']);
+                    images[file] = new Image(file, false, dim['width'], dim['height'], imagePath);
 
                     i++;
                 }
@@ -93,13 +94,15 @@ var ImageController = {
             // There is no image folder, create it
 
             try {
-                mkdirp.sync(config.imageLocation);
+                mkdirp.sync(config.images.relativeLocation);
             } catch (e) {
                 // Could not create image folder, return false
 
                 cb(true);
             }
         }
+
+        console.log(images);
 
         // Load matrices
 
@@ -127,17 +130,15 @@ var ImageController = {
     },
 
     loadMatrix: function (image, cb) {
-        /*im_processor.getImageMatrix(image.name, function (err, result) {
-            if (cb)
-                if (err)
+        im_processor.getImageMatrix(image.path, 1, 1.0, 1, function (err, result) {
+            if(cb)
+                if(err)
                     cb(err);
                 else {
                     image.matrix = result;
                     cb(null, image);
                 }
-        });*/
-
-        cb(null, image); //TODO use im_processor again
+        });
     },
 
     getImageWithoutMatrix: function(image){

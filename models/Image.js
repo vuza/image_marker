@@ -3,7 +3,7 @@ var config = require('./../config'),
     io = require('socket.io')(config.socket.port);
 
 // It is wrapped in a function, so we can use JS new operator
-module.exports = function(name, locked, width, height){
+module.exports = function(name, locked, width, height, path){
     /**
      * Private vars
      */
@@ -17,6 +17,7 @@ module.exports = function(name, locked, width, height){
     this.locked = locked;
     this.width = width;
     this.height = height;
+    this.path = path;
 
     /**
      * Private logic
