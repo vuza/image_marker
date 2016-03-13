@@ -33,7 +33,7 @@ var ImageController = {
         });
 
         if (image) {
-            res.status(200).send({err: null, result: ImageController.getImageWithoutMatrix(image)});
+            res.status(200).send({err: null, result: ImageController.stripPrivateImageInfo(image)});
         } else {
             winston.debug('No unlocked image found');
             res.status(200).send({err: {msg: 'No unlocked image found', code: 0}, result: null});
@@ -50,7 +50,7 @@ var ImageController = {
             if(lock)
                 image.locked = true;
 
-            res.status(200).send({err: null, result: ImageController.getImageWithoutMatrix(image)});
+            res.status(200).send({err: null, result: ImageController.stripPrivateImageInfo(image)});
         } else
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
@@ -63,7 +63,7 @@ var ImageController = {
         var tmp_images = [];
 
         Object.keys(images).every(function (name) {
-            tmp_images.push(ImageController.getImageWithoutMatrix(images[name]));
+            tmp_images.push(ImageController.stripPrivateImageInfo(images[name]));
 
             return true;
         });
@@ -141,9 +141,10 @@ var ImageController = {
         });
     },
 
-    getImageWithoutMatrix: function(image){
+    stripPrivateImageInfo: function(image){
         extend({}, image);
         delete image.matrix;
+        delete image.path;
 
         return image;
     },

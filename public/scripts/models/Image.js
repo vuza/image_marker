@@ -2,7 +2,12 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
     var socket,
         Image = Backbone.Model.extend({
             initialize: function () {
+                var This = this;
                 socket = socketio(config.socket);
+                socket.on(This.get('name') + 'setLocked', function(data){
+                    This.set('locked', data.locked);
+                });
+
                 this.on('change:locked', this.updateLockstatus, this);
             },
 

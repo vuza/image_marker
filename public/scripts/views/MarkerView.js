@@ -1,4 +1,4 @@
-define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], function(markerView, Marionette, d3, randomColor) {
+define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path', 'config'], function(markerView, Marionette, d3, randomColor, path, config) {
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
@@ -6,10 +6,10 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], func
             this.image = image;
         },
 
-        onRender: function(){
-            $(this.el).html('<image src="/images/' + this.image.get('name') + '">');
-
-            return this;
+        templateHelpers: function () {
+            return {
+                src: path.join(config.imagePath, this.image.get('name'))
+            }
         },
 
         onDestroy: function(){

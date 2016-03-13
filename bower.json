@@ -28,7 +28,8 @@
     "requirejs": "~2.1.22",
     "socket.io-client": "~1.4.5",
     "underscore-tpl": "~0.3.3",
-    "text": "~2.0.14"
+    "text": "~2.0.14",
+    "path": "~3.46.1"
   },
   "resolutions": {
     "lodash": "~4.3.0"

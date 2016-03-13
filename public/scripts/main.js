@@ -12,6 +12,7 @@ require.config({
         randomcolor: 'vendor/bower/randomcolor/randomColor',
         async: 'vendor/bower/async/lib/async',
         socketio: 'vendor/bower/socket.io-client/socket.io',
+        path: 'vendor/bower/path/path',
         Radio: 'vendor/bower/backbone.radio/build/backbone.radio',
         config: 'config'
     },

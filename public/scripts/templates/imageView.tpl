@@ -1,1 +1,1 @@
-iiimage oida
+<img src="<%= src %>">

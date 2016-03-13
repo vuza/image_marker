@@ -10,7 +10,6 @@ define(['Marionette'], function (Marionette) {
              */
             routes: {
                 '': 'showRandomUnlockedImage',
-
                 'overview': 'showImageOverview'
             },
 
