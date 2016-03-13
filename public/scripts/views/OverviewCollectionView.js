@@ -6,15 +6,22 @@ define(['tpl!templates/imageView.tpl', 'config', 'path'], function(imageTemplate
             var This = this;
             this.listenTo(This.model, 'change:locked', function(){
                 if(This.model.get('locked'))
-                    $(This.$el).setClass('locked');
+                    $(This.$el).addClass('locked');
                 else
                     $(This.$el).removeClass('locked');
             });
         },
 
         attributes: function () {
+            var This = this;
             return {
-                'class': this.model.get('locked')?'locked':''
+                'class': function(){
+                    var classes = ['imageView'];
+                    if(This.model.get('locked'))
+                        classes.push('locked');
+
+                    return classes.join(' ');
+                }
             }
         },
 

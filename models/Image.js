@@ -35,22 +35,18 @@ module.exports = function(name, locked, width, height, path){
         socket.on('disconnect', function() {
             var i = sockets.indexOf(socket);
             if(i > -1)
-                sockets.splice(socket, 1);
+                sockets = sockets.splice(socket, 1);
         });
     });
 
     // Check lock status
     setInterval(function(){
-        var before = This.locked;
-
         This.locked = setLockedRecently;
         setLockedRecently = false;
 
-        if(before != This.locked && This.locked == false){
-            sockets.forEach(function(s){
-                s.emit(This.name + 'setLocked', {locked: false});
-            });
-        }
+        sockets.forEach(function(s){
+            s.emit(This.name + 'setLocked', {locked: This.locked});
+        });
 
         winston.verbose('[update status] ' + This.name + ', locked: ' + This.locked);
     }, 11000);
