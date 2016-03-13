@@ -2,6 +2,7 @@ var path = require('path');
 
 module.exports = {
     images: {
+        publicRelativeLocation: '/images',
         relativeLocation: './public/images',
         absoluteLocation: path.join(path.dirname(process.mainModule.filename), '/public/images/')
     },

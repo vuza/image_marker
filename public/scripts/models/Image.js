@@ -1,5 +1,5 @@
 define(['socketio', 'config', 'controllers/ErrorController'], function (socketio, config, errorController) {
-    var socket
+    var socket,
         Image = Backbone.Model.extend({
             initialize: function () {
                 socket = socketio(config.socket);

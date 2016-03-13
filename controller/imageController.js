@@ -102,8 +102,6 @@ var ImageController = {
             }
         }
 
-        console.log(images);
-
         // Load matrices
 
         // Create tasks
@@ -135,7 +133,9 @@ var ImageController = {
                 if(err)
                     cb(err);
                 else {
-                    image.matrix = result;
+                    var matrix = JSON.parse(result);
+                    matrix = matrix.data;
+                    image.matrix = matrix;
                     cb(null, image);
                 }
         });
@@ -148,9 +148,33 @@ var ImageController = {
         return image;
     },
 
-    createSvg: function(image, cb){
-        //TODO finish implementation when receiving correct matrix
+    createAllSvgs: function(cb){
+        // Load svgs
 
+        // Create tasks
+        var tasks = [];
+        Object.keys(images).every(function (name) {
+            tasks.push(
+                function (cb) {
+                    ImageController.createSvg(images[name], function (err, svg) {
+                        // Save image to images
+                        images[name].svg = svg;
+
+                        cb(err);
+                    });
+                }
+            );
+
+            return true;
+        });
+
+        // Run tasks
+        async.parallel(tasks, function (err) {
+            cb(err);
+        });
+    },
+
+    createSvg: function(image, cb){
         winston.debug('create svg');
 
         // create the svg
@@ -169,6 +193,7 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
+            .attr('xlink:href', path.join(config.images.publicRelativeLocation, image.name))
             .attr('width', image.width)
             .attr('height', image.height);
 
@@ -181,18 +206,18 @@ var ImageController = {
 
         winston.debug('create dots at svg');
 
+        var matrix = image.matrix.filter(function(obj){
+            return obj.isContour;
+        });
+
         svg.selectAll('.dot')
-            .data(image.matrix.data)
+            .data(matrix)
             .enter().append('circle')
             .attr('class', 'dot')
             .attr('r', 1)
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; })
-            .style('fill', function(){
-                return randomColor({
-                    format: 'hex'
-                });
-            })
+            .style('fill', '#fff')
             .attr('fill-opacity', function(){
                 return Math.random() * (1 - 0.2) + 0.2;
             });

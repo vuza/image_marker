@@ -43,6 +43,7 @@ var startServer = function(cb){
 
 async.series([
     imageController.loadImages,
+    imageController.createAllSvgs,
     registerMiddlewares,
     startServer
 ], function(err){
