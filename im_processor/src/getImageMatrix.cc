@@ -15,40 +15,48 @@ using Nan::Null;
 using Nan::To;
 
 class GetImageMatrixWorker : public AsyncWorker {
- public:
-  GetImageMatrixWorker(Callback *callback, std::string path)
-    : AsyncWorker(callback), path(path), matrix("") {
+public:
+    GetImageMatrixWorker(Callback *callback, std::string imgPath, int superpixelsize, double compactness,
+                         int thr_col_val)
+            : AsyncWorker(callback), imgPath(imgPath), superpixelsize(superpixelsize), compactness(compactness),
+              thr_col_val(thr_col_val) {
         im_processor_api = new Im_processor_api();
     }
 
-  ~GetImageMatrixWorker() {}
+    ~GetImageMatrixWorker() { }
 
-  void Execute () {
-    matrix = im_processor_api->getImageMatrix(path);
-  }
+    void Execute() {
+        imgMatrix = im_processor_api->getImageMatrix(imgPath, superpixelsize, compactness, thr_col_val);
+    }
 
-  void HandleOKCallback () {
-    HandleScope scope;
+    void HandleOKCallback() {
+        HandleScope scope;
 
-    Local<Value> argv[] = {
-        Null(),
-        Nan::New<v8::String>(matrix.c_str(), matrix.length()).ToLocalChecked()
-    };
+        Local <Value> argv[] = {
+                Null(),
+                Nan::New<v8::String>(imgMatrix.c_str(), imgMatrix.length()).ToLocalChecked()
+        };
 
-    callback->Call(2, argv);
-  }
+        callback->Call(2, argv);
+    }
 
- private:
-  std::string path;
-  std::string matrix;
-  Im_processor_api* im_processor_api;
+private:
+    std::string imgPath;
+    std::string imgMatrix;
+    int superpixelsize;
+    double compactness;
+    int thr_col_val;
+
+    Im_processor_api *im_processor_api;
 };
 
 NAN_METHOD(GetImageMatrix) {
-  v8::String::Utf8Value param1(info[0]->ToString());
-  std::string path = std::string(*param1);
+    std::string imgPath(*v8::String::Utf8Value(info[0]->ToString()));
+    int superpixelsize = info[1]->IntegerValue();
+    double compactness = info[2]->NumberValue();
+    int thr_col_val = info[3]->IntegerValue();
 
-  Callback *callback = new Callback(info[1].As<Function>());
+    Callback *callback = new Callback(info[4].As<Function>());
 
-  AsyncQueueWorker(new GetImageMatrixWorker(callback, path));
+    AsyncQueueWorker(new GetImageMatrixWorker(callback, imgPath, superpixelsize, compactness, thr_col_val));
 }

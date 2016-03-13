@@ -13,17 +13,17 @@
  */
 Im_processor_api::Im_processor_api() { }
 
-std::string Im_processor_api::getImageMatrix(std::string imgPath)
+std::string Im_processor_api::getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val)
 {
     init();
-    loadImage(imgPath);
+    loadImage(imgPath, superpixelsize, compactness, thr_col_val);
     return createImgMatrix();
 }
 
-std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int label)
+std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int label, int superpixelsize, double compactness, int thr_col_val)
 {
     init();
-    loadImage(imgPath);
+    loadImage(imgPath, superpixelsize, compactness, thr_col_val);
 
     if (label == label_names.size()-1) label=255;
 
@@ -80,10 +80,10 @@ std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int
     return createImgMatrix();
 }
 
-std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int label)
+std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int label, int superpixelsize, double compactness, int thr_col_val)
 {
     init();
-    loadImage(imgPath);
+    loadImage(imgPath, superpixelsize, compactness, thr_col_val);
 
     for (int v=0; v<image_labels.rows; v++)
     {
@@ -123,7 +123,7 @@ void Im_processor_api::initLabelNames()
     label_names.push_back("Undefined");
 }
 
-void Im_processor_api::loadImage(string imgPath)
+void Im_processor_api::loadImage(string imgPath, int superpixelsize, double compactness, int thr_col_val)
 {
     image_path = imgPath;
 
@@ -155,7 +155,7 @@ void Im_processor_api::loadImage(string imgPath)
     //TODO should this be an extra method? ex. calcSuperpixels()
     image_mask = cv::Mat_<int>::zeros(image.rows, image.cols);
 
-    thr_col = ((double)thr_col_val)/10.;
+    double thr_col = ((double)thr_col_val)/10.;
     spc.setColorThreshold(thr_col);
 
     slic.segmentSuperpixelSize(image,labels,numlabels, superpixelsize, compactness);

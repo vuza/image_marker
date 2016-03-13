@@ -26,28 +26,34 @@ public:
     /**
     * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
     * @param imgPath path to image
+    * @param superpixelsize TODO description
+    * @param compactness TODO description
+    * @param thr_col_val TODO description
     * @return imgMatrix in JSON format
     */
-    //TODO pass args: superpixel compactness, superpixel size
-    std::string getImageMatrix(std::string imgPath);
+    std::string getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val );
 
     /**
      * fills the segment around the x and y coordinate with the given label
      * @param imgPath path to image
      * @param label the label to fill the segment with
+     * @param superpixelsize TODO description
+     * @param compactness TODO description
+     * @param thr_col_val TODO description
      * @return imgMatrix in JSON format
      */
-    //TODO pass args: superpixel compactness, superpixel size
-    std::string fillSegment(std::string imgPath, int x, int y, int label);
+    std::string fillSegment(std::string imgPath, int x, int y, int label, int superpixelsize, double compactness, int thr_col_val);
 
     /**
      * fills all unlabeledSegments with the given label
      * @param imgPath path to image
      * @param label the label to fill the segments with
+     * @param superpixelsize TODO description
+     * @param compactness TODO description
+     * @param thr_col_val TODO description
      * @return imgMatrix in JSON format
      */
-    //TODO pass args: superpixel compactness, superpixel size
-    std::string fillAllUnlabeledSegments(std::string imgPath, int label);
+    std::string fillAllUnlabeledSegments(std::string imgPath, int label, int superpixelsize, double compactness, int thr_col_val);
 
 private:
 
@@ -58,13 +64,15 @@ private:
      * loads the given image and its label image into image and image_labels
      * saves the imgPath into image_path
      * @param imgPath path to image
+     * @param superpixelsize TODO description
+     * @param compactness TODO description
+     * @param thr_col_val TODO description
      */
-    void loadImage(std::string imgPath);
+    void loadImage(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
     /**
      * creates the image matrix in JSON format
-     * Precondition: execute init() and loadImage() methods before
-     * @param imgPath path to image
+     * Precondition: init() and loadImage() methods executed before
      * @return imgMatrix in JSON format
      */
     std::string createImgMatrix();
@@ -88,11 +96,10 @@ private:
     cv::Mat_<int> image_mask;
 
     //variables for superpixel clustering
-    int superpixelsize = 100;
-    double compactness = 10;  //Compactness factor. use a value ranging from 10 to 40 depending on your needs. Default is 10
-    double thr_col = 2.5;
+    //int superpixelsize = 100;
+    //double compactness = 10;  //Compactness factor. use a value ranging from 10 to 40 depending on your needs. Default is 10
+    //int thr_col_val=25;
 
-    int thr_col_val=25;
     int numlabels = 0;
     cv::Mat_<int> labels, spc_labels;
     std::vector<jvis::RecursiveSuperpixelClustering::Cluster> clusters;
