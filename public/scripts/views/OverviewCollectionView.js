@@ -28,13 +28,21 @@ define(['tpl!templates/imageView.tpl', 'config', 'path'], function(imageTemplate
         templateHelpers: function () {
             return {
                 src: path.join(config.imagePath, this.model.get('name')),
-                locked: this.model.get('locked')
+                locked: this.model.get('locked'),
+                height: this.model.get('height'),
+                width: this.model.get('width')
             }
         }
     });
 
     var OverviewCollectionView = Marionette.CollectionView.extend({
-        childView: ImageView
+        childView: ImageView,
+
+        attributes: function(){
+            return {
+                class: 'inner'
+            }
+        }
     });
 
     return OverviewCollectionView;
