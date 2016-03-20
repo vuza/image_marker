@@ -10,7 +10,8 @@ define(['Marionette'], function (Marionette) {
              */
             routes: {
                 '': 'showRandomUnlockedImage',
-                'overview': 'showImageOverview'
+                'overview': 'showImageOverview',
+                'image/:imageName': 'showImage'
             },
 
             showRandomUnlockedImage: function(){
@@ -38,6 +39,20 @@ define(['Marionette'], function (Marionette) {
 
                     // Load navigation
                     //TODO
+                });
+            },
+
+            showImage: function(imageName){
+                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
+                    // Create layout and render to main section
+                    var imageNavigationLayout = new ImageNavigationLayout();
+                    app.mainRegion.show(imageNavigationLayout);
+
+                    // Load Marker to image
+                    markerController.showImage(imageName, imageNavigationLayout.getRegion('image'));
+
+                    // Load Navigation to navigation
+                    navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
                 });
             }
         });
