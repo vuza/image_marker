@@ -8,7 +8,7 @@ module.exports = function(name, locked, width, height, path){
      * Private vars
      */
     var setLockedRecently = false,
-        sockets = [],
+        sockets = {},
         This = this;
 
     /**
@@ -24,7 +24,7 @@ module.exports = function(name, locked, width, height, path){
      * Private logic
      */
     io.on('connection', function(socket){
-        sockets.push(socket);
+        sockets[socket.conn.id] = socket;
 
         socket.on(This.name + 'setLocked', function(data){
             setLockedRecently = This.locked = data.locked;
@@ -33,9 +33,8 @@ module.exports = function(name, locked, width, height, path){
         });
 
         socket.on('disconnect', function() {
-            var i = sockets.indexOf(socket);
-            if(i > -1)
-                sockets = sockets.splice(socket, 1);
+            if(sockets[socket.conn.id])
+                delete sockets[socket.conn.id];
         });
     });
 
@@ -44,8 +43,8 @@ module.exports = function(name, locked, width, height, path){
         This.locked = setLockedRecently;
         setLockedRecently = false;
 
-        sockets.forEach(function(s){
-            s.emit(This.name + 'setLocked', {locked: This.locked});
+        Object.keys(sockets).forEach(function(id){
+            sockets[id].emit(This.name + 'setLocked', {locked: This.locked});
         });
 
         winston.verbose('[update status] ' + This.name + ', locked: ' + This.locked);

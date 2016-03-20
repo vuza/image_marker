@@ -4,7 +4,9 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
             showRandomUnlockedImage: function (region) {
                 MarkerController.region = region;
 
-                var image = new Image();
+                var image = new Image({
+                    sendLockedStatusToServer: true
+                });
 
                 async.waterfall([
                     // Load image

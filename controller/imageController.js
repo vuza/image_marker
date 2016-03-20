@@ -122,7 +122,7 @@ var ImageController = {
         });
 
         // Run tasks
-        async.parallel(tasks, function (err) {
+        async.series(tasks, function (err) {
             cb(err);
         });
     },
@@ -207,6 +207,7 @@ var ImageController = {
 
         winston.debug('create dots at svg');
 
+        // Add matrix TODO there is no valid matrix now
         var matrix = image.matrix.filter(function(obj){
             return obj.isContour;
         });
@@ -218,10 +219,18 @@ var ImageController = {
             .attr('r', 1)
             .attr('cx', function(d) { return d.x; })
             .attr('cy', function(d) { return d.y; })
-            .style('fill', '#fff')
-            .attr('fill-opacity', function(){
-                return Math.random() * (1 - 0.2) + 0.2;
-            });
+            .style('fill', function(d){
+                if(d.isContour){
+                    return '#000';
+                } else if(d.label == 7){
+                    console.log('label 7')
+                }
+
+                console.log(d);
+
+                return '#fff';
+            })
+            .attr('fill-opacity', 0.5);
 
         if(cb) cb(null, d3.select(document.body).html());
     }

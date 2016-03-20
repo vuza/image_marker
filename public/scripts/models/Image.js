@@ -1,21 +1,30 @@
 define(['socketio', 'config', 'controllers/ErrorController'], function (socketio, config, errorController) {
     var socket,
         Image = Backbone.Model.extend({
-            initialize: function () {
+            initialize: function (opt) {
+                opt = opt || {};
+                if(opt.name) this.set('name', opt.name);
+                if(opt.height) this.set('height', opt.height);
+                if(opt.width) this.set('width', opt.width);
+                if(opt.locked) this.set('locked', opt.locked);
+                if(opt.sendLockedStatusToServer) this.set('sendLockedStatusToServer', opt.sendLockedStatusToServer);
+
                 var This = this;
                 socket = socketio(config.socket);
                 socket.on(This.get('name') + 'setLocked', function(data){
                     This.set('locked', data.locked);
                 });
 
-                this.on('change:locked', this.updateLockstatus, this);
+                if(this.get('sendLockedStatusToServer'))
+                    this.on('change:locked', this.updateLockstatus, this);
             },
 
             defaults: {
                 name: '',
                 height: 0,
                 width: 0,
-                locked: false
+                locked: false,
+                sendLockedStatusToServer: false
             },
 
             urlRoot: config.api + '/image',
