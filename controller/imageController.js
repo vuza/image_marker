@@ -23,6 +23,8 @@ var ImageController = {
             if (!images[name].locked) {
                 image = images[name];
 
+                image.wasLockedBeforeRequested = image.locked || false;
+
                 if(lock)
                     image.locked = true;
 
@@ -47,6 +49,8 @@ var ImageController = {
         winston.verbose('Get image: ' + image);
 
         if (image) {
+            image.wasLockedBeforeRequested = image.locked || false;
+
             if(lock)
                 image.locked = true;
 

@@ -15,8 +15,13 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
                     This.set('locked', data.locked);
                 });
 
-                if(this.get('sendLockedStatusToServer'))
-                    this.on('change:locked', this.updateLockstatus, this);
+                this.on('sync', function(){
+                    if(This.get('sendLockedStatusToServer') && !This.get('wasLockedBeforeRequested')) {
+                        This.on('change:locked', This.updateLockstatus, This);
+
+                        This.updateLockstatus();
+                    }
+                }, this);
             },
 
             defaults: {
@@ -55,6 +60,7 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
                 var locked = this.get('locked'),
                     name = this.get('name'),
                     connect = function () {
+                        console.log('ping')
                         socket.emit(name + 'setLocked', {locked: locked});
                     };
 

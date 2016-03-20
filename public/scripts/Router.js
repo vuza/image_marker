@@ -16,12 +16,14 @@ define(['Marionette'], function (Marionette) {
 
             showRandomUnlockedImage: function(){
                 require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
-                    // Create layout and render to main section
+                    // Create layout
                     var imageNavigationLayout = new ImageNavigationLayout();
-                    app.mainRegion.show(imageNavigationLayout);
 
                     // Load Marker to image
                     markerController.showRandomUnlockedImage(imageNavigationLayout.getRegion('image'));
+
+                    // Render to main section
+                    app.mainRegion.show(imageNavigationLayout);
 
                     // Load Navigation to navigation
                     navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));

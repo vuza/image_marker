@@ -1,1 +1,1 @@
-<button id="nextImage">Next image <i class="fa fa-arrow-right"></i></button>
+<button id="nextImage">Any unlocked image <i class="fa fa-arrow-right"></i></button>

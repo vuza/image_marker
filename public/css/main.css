@@ -49,3 +49,11 @@ body{
 #overview > .inner {
     text-align: center;
 }
+
+[waslockedbeforerequested="true"] .lockOverview {
+    display: block;
+}
+
+#image{
+    position: relative;
+}

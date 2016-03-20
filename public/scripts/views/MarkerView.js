@@ -8,19 +8,12 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path
 
         templateHelpers: function () {
             return {
-                src: path.join(config.imagePath, this.image.get('name')),
-                locked: this.image.get('locked')
+                src: path.join(config.imagePath, this.image.get('name'))
             }
         },
 
         onDestroy: function(){
             this.image.set('locked', false);
-        },
-
-        attributes: function () {
-            return {
-                'id': 'markerView'
-            }
         }
     });
 

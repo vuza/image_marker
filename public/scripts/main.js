@@ -38,6 +38,9 @@ require.config({
         Radio.channel('router')
             .on('navigate', function (to) {
                 router.navigate(to, {trigger: true});
+            })
+            .on('changeUrl', function(to){
+                router.navigate(to, {trigger: false});
             });
 
         Radio.channel('uiChannel')

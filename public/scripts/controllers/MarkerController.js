@@ -25,7 +25,12 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
                         cb(null, image);
                     },
                     // Show image
-                    showImage
+                    showImage,
+                    // Set url
+                    function(image, cb){
+                        Radio.channel('router').trigger('changeUrl', '/image/' + image.get('name'));
+                        cb(null);
+                    }
                 ]);
             },
 
@@ -61,7 +66,7 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
 
     var showImage = function(image, cb){
         MarkerController.region.show(new MarkerView(image));
-        cb(null);
+        cb(null, image);
     };
 
     return new MarkerController();
