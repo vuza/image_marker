@@ -55,13 +55,29 @@ public:
      */
     std::string fillAllUnlabeledSegments(std::string imgPath, int label, int superpixelsize, double compactness, int thr_col_val);
 
+    /**
+     * prepares the image
+     * creates its label image file and its colored label image file if they does not exist
+     * @param imgPath path to image
+     */
+    std::string prepareImg(std::string imgPath);
+
 private:
 
     void init();
 
     void initLabelNames(); //TODO do we need label names in api?
+
     /**
      * loads the given image and its label image into image and image_labels
+     * saves the imgPath into image_path
+     * @param imgPath path to image
+     */
+    void loadImage(std::string imgPath);
+
+    /**
+     * loads the given image and its label image into image and image_labels
+     * and calculates the superpixels of the image
      * saves the imgPath into image_path
      * @param imgPath path to image
      * @param superpixelsize TODO description
@@ -77,22 +93,40 @@ private:
      */
     std::string createImgMatrix();
     /**
-     * saves the loaded image and its label file to directory
+     * saves the loaded image, its label file and the colored label file to directory
      * @return true if successfully saved
      */
     bool saveImg();
+
+    /**
+     * create and saves the colored label image to directory
+     * @return true if successfully created and saved.
+     */
+    bool createColoredLabelImg();
+
+    /**
+     * calculates the superpixels of the image
+     * image must be loaded before
+     * @param superpixelsize TODO description
+     * @param compactness TODO description
+     * @param thr_col_val TODO description
+     */
+    void calcSuperpixels(int superpixelsize, double compactness, int thr_col_val);
 
     vector<string> label_names;
 
     string image_path;
     string image_name;
-    //string image_ext = "jpg";
+    string image_ext = "jpg";
 
     string image_labels_path;
+    string image_labels_colored_path;
     string image_labels_ext = "png";
+    string image_labels_colored_ext = "png";
 
     cv::Mat_<cv::Vec3b> image;
     cv::Mat_<unsigned char> image_labels;
+    cv::Mat image_labels_colored;
     cv::Mat_<int> image_mask;
 
     //variables for superpixel clustering

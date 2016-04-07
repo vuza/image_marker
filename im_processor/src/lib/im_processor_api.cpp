@@ -99,6 +99,14 @@ std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int 
     return createImgMatrix();
 }
 
+std::string Im_processor_api::prepareImg(std::string imgPath)
+{
+    init();
+    loadImage(imgPath);
+
+    return "";
+}
+
 /**
  * inits the program
  */
@@ -123,7 +131,7 @@ void Im_processor_api::initLabelNames()
     label_names.push_back("Undefined");
 }
 
-void Im_processor_api::loadImage(string imgPath, int superpixelsize, double compactness, int thr_col_val)
+void Im_processor_api::loadImage(string imgPath)
 {
     image_path = imgPath;
 
@@ -135,6 +143,7 @@ void Im_processor_api::loadImage(string imgPath, int superpixelsize, double comp
     boost::split(imgNameSplitted, imgNameWithFileFormat, boost::is_any_of("."));
     assert(imgNameSplitted.size() == 3); //ex. image.1.jpg
 
+    string imgNumber = imgNameSplitted[1];
     image_name = imgNameSplitted[0] + "." + imgNameSplitted[1];
 
     string labelImgPath = "";
@@ -142,27 +151,34 @@ void Im_processor_api::loadImage(string imgPath, int superpixelsize, double comp
     {
         labelImgPath += "/" + imgPathSplitted.at(i);
     }
+    labelImgPath += "/labels/";
+    image_labels_colored_path = labelImgPath;
 
-    labelImgPath += "/" + image_name + "." + image_labels_ext;
+    labelImgPath += "label." + imgNumber + "." + image_labels_ext;
     image_labels_path = labelImgPath;
+
+    image_labels_colored_path += "label_colored." + imgNumber + "." + image_labels_colored_ext;
 
     image = cv::imread(imgPath, CV_LOAD_IMAGE_COLOR);
     image_labels = cv::imread(image_labels_path, CV_LOAD_IMAGE_GRAYSCALE);
+    image_labels_colored = cv::imread(image_labels_colored_path, CV_LOAD_IMAGE_UNCHANGED); //load with alpha channel
 
     if(image_labels.empty() || image.size() != image_labels.size())
+    {
         image_labels = cv::Mat_<unsigned char>::ones(image.rows, image.cols)*255;
+        createColoredLabelImg();
+    }
 
-    //TODO should this be an extra method? ex. calcSuperpixels()
+    if(image_labels_colored.empty() && !image_labels.empty())
+        createColoredLabelImg();
+
     image_mask = cv::Mat_<int>::zeros(image.rows, image.cols);
+}
 
-    double thr_col = ((double)thr_col_val)/10.;
-    spc.setColorThreshold(thr_col);
-
-    slic.segmentSuperpixelSize(image,labels,numlabels, superpixelsize, compactness);
-    spc.setSuperpixel(slic.getImageLAB(), labels, numlabels);
-    spc.operate(clusters);
-
-    spc.getLabelMap(clusters, spc_labels);
+void Im_processor_api::loadImage(string imgPath, int superpixelsize, double compactness, int thr_col_val)
+{
+    loadImage(imgPath);
+    calcSuperpixels(superpixelsize, compactness, thr_col_val);
 }
 
 std::string Im_processor_api::createImgMatrix()
@@ -170,8 +186,8 @@ std::string Im_processor_api::createImgMatrix()
     string result = "";
 
     result += "{\"imgPath\":\"" + image_path + "\",";
-    result += "\"width\":" + to_string(image.rows) + ",";
-    result += "\"height\":" + to_string(image.cols) + ",";
+    result += "\"width\":" + std::to_string(image.rows) + ",";
+    result += "\"height\":" + std::to_string(image.cols) + ",";
 
     result += "\"data\":[";
     for(int x = 0; x < image.rows; x++)
@@ -179,12 +195,12 @@ std::string Im_processor_api::createImgMatrix()
         for(int y = 0; y < image.cols; y++)
         {
             result += "{";
-            result+= "\"x\":" + to_string(x) + ",";
-            result+= "\"y\":" + to_string(y) + ",";
+            result+= "\"x\":" + std::to_string(x) + ",";
+            result+= "\"y\":" + std::to_string(y) + ",";
 
             //calculate label from greyColor
             int label = jvis::getLabel(image_labels(y,x));
-            result+= "\"label\":" + to_string(label) + ",";
+            result+= "\"label\":" + std::to_string(label) + ",";
 
             result+= "\"isContour\": false" + string("},"); //TODO check if true or false
         }
@@ -199,5 +215,39 @@ std::string Im_processor_api::createImgMatrix()
 bool Im_processor_api::saveImg()
 {
     cv::imwrite(image_labels_path, image_labels);
+    createColoredLabelImg();
     return true; //TODO check if imwrite was succesful.
+}
+
+bool Im_processor_api::createColoredLabelImg()
+{
+
+    image_labels_colored = cv::Mat(image.rows, image.cols, CV_8UC4);
+    image_labels_colored = cv::Scalar(0,0,0,0);
+
+    for (int v=0; v<image_labels.rows; v++)
+    {
+        for (int u=0; u<image_labels.cols; u++)
+        {
+            unsigned char label = image_labels(v,u);
+            if (label==255) continue;
+
+            cv::Vec3b color = jvis::getCol(label);
+            image_labels_colored.at<cv::Vec4b>(v,u) = cv::Vec4b(color.val[0], color.val[1], color.val[2], 255);
+        }
+    }
+
+    cv::imwrite(image_labels_colored_path, image_labels_colored);
+}
+
+void Im_processor_api::calcSuperpixels(int superpixelsize, double compactness, int thr_col_val)
+{
+    double thr_col = ((double)thr_col_val)/10.;
+    spc.setColorThreshold(thr_col);
+
+    slic.segmentSuperpixelSize(image,labels,numlabels, superpixelsize, compactness);
+    spc.setSuperpixel(slic.getImageLAB(), labels, numlabels);
+    spc.operate(clusters);
+
+    spc.getLabelMap(clusters, spc_labels);
 }
