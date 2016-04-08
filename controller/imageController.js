@@ -25,7 +25,7 @@ var ImageController = {
 
                 image.wasLockedBeforeRequested = image.locked || false;
 
-                if(lock)
+                if (lock)
                     image.locked = true;
 
                 return false;
@@ -51,7 +51,7 @@ var ImageController = {
         if (image) {
             image.wasLockedBeforeRequested = image.locked || false;
 
-            if(lock)
+            if (lock)
                 image.locked = true;
 
             res.status(200).send({err: null, result: ImageController.stripPrivateImageInfo(image)});
@@ -59,7 +59,7 @@ var ImageController = {
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
     },
 
-    getImages: function(req, res){
+    getImages: function (req, res) {
         winston.verbose('Getting images');
 
         var lock = (req.params['lock'] == 'true');
@@ -72,9 +72,9 @@ var ImageController = {
             return true;
         });
 
-        if(tmp_images.length > 0){
+        if (tmp_images.length > 0) {
             res.status(200).send({err: null, result: tmp_images});
-        } else{
+        } else {
             res.status(200).send({err: {msg: 'No images found at all', code: 3}, result: null});
         }
     },
@@ -133,8 +133,8 @@ var ImageController = {
 
     loadMatrix: function (image, cb) {
         im_processor.getImageMatrix(image.path, 1, 1.0, 1, function (err, result) {
-            if(cb)
-                if(err)
+            if (cb)
+                if (err)
                     cb(err);
                 else {
                     var matrix = JSON.parse(result);
@@ -145,7 +145,7 @@ var ImageController = {
         });
     },
 
-    stripPrivateImageInfo: function(image){
+    stripPrivateImageInfo: function (image) {
         extend({}, image);
         delete image.matrix;
         delete image.path;
@@ -153,7 +153,7 @@ var ImageController = {
         return image;
     },
 
-    createAllSvgs: function(cb){
+    createAllSvgs: function (cb) {
         // Load svgs
 
         // Create tasks
@@ -179,7 +179,7 @@ var ImageController = {
         });
     },
 
-    createSvg: function(image, cb){
+    createSvg: function (image, cb) {
         winston.debug('create svg');
 
         // create the svg
@@ -211,32 +211,32 @@ var ImageController = {
 
         winston.debug('create dots at svg');
 
-        // Add matrix TODO there is no valid matrix now
-        var matrix = image.matrix.filter(function(obj){
-            return obj.isContour;
-        });
-
-        svg.selectAll('.dot')
-            .data(matrix)
-            .enter().append('circle')
+        /*svg.selectAll('.dot')
+            .data(image.matrix)
+            .enter()
+            .append('circle')
             .attr('class', 'dot')
             .attr('r', 1)
-            .attr('cx', function(d) { return d.x; })
-            .attr('cy', function(d) { return d.y; })
-            .style('fill', function(d){
-                if(d.isContour){
+            .attr('cx', function (d) {
+                return d.x;
+            })
+            .attr('cy', function (d) {
+                return d.y;
+            })
+            .style('fill', function (d) {
+                console.log('HI');
+                if (d.isContour) {
                     return '#000';
-                } else if(d.label == 7){
-                    console.log('label 7')
+                } else if (d.label == 7) {
+                    return '#ef8220';
                 }
 
-                console.log(d);
-
+                // Default
                 return '#fff';
             })
-            .attr('fill-opacity', 0.5);
+            .attr('fill-opacity', 0.5);*/
 
-        if(cb) cb(null, d3.select(document.body).html());
+        if (cb) cb(null, d3.select(document.body).html());
     }
 };
 
