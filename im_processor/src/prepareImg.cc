@@ -48,7 +48,7 @@ private:
 NAN_METHOD(PrepareImg) {
         std::string imgPath(*v8::String::Utf8Value(info[0]->ToString()));
 
-        Callback *callback = new Callback(info[4].As<Function>());
+        Callback *callback = new Callback(info[1].As<Function>());
 
         AsyncQueueWorker(new PrepareImgWorker(callback, imgPath));
 }

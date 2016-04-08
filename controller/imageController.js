@@ -102,21 +102,26 @@ var ImageController = {
             }
         }
 
-        // Load matrices
+        cb(null);
+    },
 
-        // Create tasks
+    createLabelsForLoadedImages: function(cb){
+        if(!fs.existsSync(config.labels.absoluteLocation)){
+            // No labels ordner, create it!
+
+            mkdirp.sync(config.labels.absoluteLocation);
+        }
+
         var tasks = [];
-        Object.keys(images).every(function (name) {
-            tasks.push(
-                function (cb) {
-                    ImageController.loadMatrix(images[name], function (err, image) {
-                        // Save image to images
-                        images[image.name] = image;
 
-                        cb(err);
+        Object.keys(images).every(function (name) {
+            if(!fs.existsSync(path.join(config.images.absoluteLocation, 'label_colored.' + ImageController.stripImageFileExtension(images[name].name) + '.png'))){
+                tasks.push(function(cb){
+                    im_processor.prepareImg(images[name].path, function(){
+                        cb(null);
                     });
-                }
-            );
+                });
+            }
 
             return true;
         });
@@ -125,28 +130,6 @@ var ImageController = {
         async.parallel(tasks, function (err) {
             cb(err);
         });
-    },
-
-    loadMatrix: function (image, cb) {
-        im_processor.getImageMatrix(image.path, 1, 1.0, 1, function (err, result) {
-            if(cb)
-                if(err)
-                    cb(err);
-                else {
-                    var matrix = JSON.parse(result);
-                    matrix = matrix.data;
-                    image.matrix = matrix;
-                    cb(null, image);
-                }
-        });
-    },
-
-    stripPrivateImageInfo: function(image){
-        extend({}, image);
-        delete image.matrix;
-        delete image.path;
-
-        return image;
     },
 
     createAllSvgs: function(cb){
@@ -207,11 +190,7 @@ var ImageController = {
 
         winston.debug('create dots at svg');
 
-        var matrix = image.matrix.filter(function(obj){
-            return obj.isContour;
-        });
-
-        svg.selectAll('.dot')
+        /*svg.selectAll('.dot')
             .data(matrix)
             .enter().append('circle')
             .attr('class', 'dot')
@@ -221,9 +200,25 @@ var ImageController = {
             .style('fill', '#fff')
             .attr('fill-opacity', function(){
                 return Math.random() * (1 - 0.2) + 0.2;
-            });
+            });*/
 
         if(cb) cb(null, d3.select(document.body).html());
+    },
+
+    stripPrivateImageInfo: function(image){
+        extend({}, image);
+        delete image.matrix;
+        delete image.path;
+
+        return image;
+    },
+
+    stripImageFileExtension: function(name){
+        var nameSplit = name.split('.');
+        nameSplit.pop();
+        name = nameSplit.join('.');
+
+        return name;
     }
 };
 

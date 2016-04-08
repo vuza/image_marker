@@ -15,5 +15,8 @@ module.exports = {
     listenPort: 3991,
     socket: {
         port: 3000
+    },
+    labels: {
+        absoluteLocation: path.join(path.dirname(process.mainModule.filename), '/public/images/labels')
     }
 };
