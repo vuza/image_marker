@@ -118,9 +118,13 @@ var ImageController = {
 
         var tasks = [];
         Object.keys(images).every(function (name) {
-            if (!fs.existsSync(path.join(config.images.absoluteLocation, 'label_colored.' + ImageController.stripImageFileExtension(images[name].name) + '.png'))) {
+            var labelName = 'label_colored.' + ImageController.stripImageFileExtensionAndImagePrefix(images[name].name) + '.png';
+
+            if (!fs.existsSync(path.join(config.images.absoluteLocation, labelName))) {
                 tasks.push(function (cb) {
                     im_processor.prepareImg(images[name].path, function () {
+                        images[name].label = labelName;
+
                         cb(null);
                     });
                 });
@@ -164,6 +168,8 @@ var ImageController = {
     createSvg: function (image, cb) {
         winston.debug('create svg');
 
+        d3.select(document.body).html("");
+
         // create the svg
         var svg = d3.select(document.body).append("svg")
             .attr('width', image.width)
@@ -180,7 +186,17 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
-            .attr('xlink:href', path.join(config.images.publicRelativeLocation, image.name))
+            .attr('xlink:xlink:href', path.join(config.images.publicRelativeLocation, image.name))
+            .attr('width', image.width)
+            .attr('height', image.height);
+
+        defs.append('pattern')
+            .attr('id', 'label')
+            .attr('patternUnits', 'userSpaceOnUse')
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .append('image')
+            .attr('xlink:xlink:href', path.join(config.images.publicRelativeLocation, 'labels', image.label))
             .attr('width', image.width)
             .attr('height', image.height);
 
@@ -191,20 +207,12 @@ var ImageController = {
             .attr('height', image.height)
             .attr('fill', 'url(#image)');
 
-        winston.debug('create dots at svg');
-
-        /*svg.selectAll('.dot')
-         .data(image.matrix)
-         .enter()
-         .append('circle')
-         .attr('class', 'dot')
-         .attr('r', 1)
-         .attr('cx', function(d) { return d.x; })
-         .attr('cy', function(d) { return d.y; })
-         .style('fill', '#fff')
-         .attr('fill-opacity', function(){
-         return Math.random() * (1 - 0.2) + 0.2;
-         });*/
+        svg.append('rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .attr('fill', 'url(#label)');
 
         if (cb) cb(null, d3.select(document.body).html());
     },
@@ -217,8 +225,9 @@ var ImageController = {
         return image;
     },
 
-    stripImageFileExtension: function (name) {
+    stripImageFileExtensionAndImagePrefix: function (name) {
         var nameSplit = name.split('.');
+        nameSplit.shift();
         nameSplit.pop();
         name = nameSplit.join('.');
 

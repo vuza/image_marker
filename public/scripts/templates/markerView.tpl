@@ -1,2 +1,2 @@
-<img src="<%= src %>">
+<%= svg %>
 <div class="lockOverview"></div>

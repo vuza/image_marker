@@ -60,7 +60,6 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
                 var locked = this.get('locked'),
                     name = this.get('name'),
                     connect = function () {
-                        console.log('ping')
                         socket.emit(name + 'setLocked', {locked: locked});
                     };
 
