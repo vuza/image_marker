@@ -123,7 +123,7 @@ var ImageController = {
             } catch (e) {
                 // Could not create image folder, return false
 
-                cb(true);
+                cb(e);
             }
         }
     },
