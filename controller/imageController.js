@@ -87,9 +87,9 @@ var ImageController = {
         var imagePath = path.join(config.images.absoluteLocation, name);
 
         //TODO get/set better values
-        var superpixelsize = 1;
-        var compactness = 1;
-        var thr_col_val = 1;
+        var superpixelsize = 100;
+        var compactness = 100;
+        var thr_col_val = 50;
 
         im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
             console.log(err);

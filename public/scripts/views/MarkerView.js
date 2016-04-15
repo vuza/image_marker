@@ -41,6 +41,8 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path
             this.image.markImage(relativeClickPosition.x, relativeClickPosition.y, label, function(){
                 var $label = $image.find('defs #label image');
                 $label.attr('xlink:href', $label.attr('xlink:href') + '?cachebreaker=' + new Date().getTime());
+
+                console.log('reloaded'); //TODO remove
             });
         }
     });
