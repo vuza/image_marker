@@ -103,7 +103,7 @@ var ImageController = {
 
         var i = 0;
         try {
-            fs.readdirSync(config.images.relativeLocation).forEach(function (file) {
+            fs.readdirSync(config.images.absoluteLocation).forEach(function (file) {
                 var imagePath = path.join(config.images.absoluteLocation, file);
                 if (!fs.lstatSync(imagePath).isDirectory()) {
                     var dim = sizeOf(imagePath);
