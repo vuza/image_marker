@@ -1,6 +1,6 @@
 ---
 root: "/var/node/image_marker"
 git: "git@github.com:vuza/image_marker.git"
-gitVersion: "develop"
+gitVersion: "feature/check_for_clicks_on_image"
 loggingLocation: "/var/log/image_marker"
 remote_user: deploy

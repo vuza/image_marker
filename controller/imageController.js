@@ -118,14 +118,14 @@ var ImageController = {
 
             try {
                 mkdirp.sync(config.images.relativeLocation);
+
+                cb(null);
             } catch (e) {
                 // Could not create image folder, return false
 
                 cb(true);
             }
         }
-
-        cb(null);
     },
 
     createLabelsForLoadedImages: function (cb) {
