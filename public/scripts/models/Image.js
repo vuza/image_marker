@@ -1,22 +1,22 @@
-define(['socketio', 'config', 'controllers/ErrorController'], function (socketio, config, errorController) {
+define(['socketio', 'config', 'controllers/ErrorController', 'jquery'], function (socketio, config, errorController, $) {
     var socket,
         Image = Backbone.Model.extend({
             initialize: function (opt) {
                 opt = opt || {};
-                if(opt.name) this.set('name', opt.name);
-                if(opt.height) this.set('height', opt.height);
-                if(opt.width) this.set('width', opt.width);
-                if(opt.locked) this.set('locked', opt.locked);
-                if(opt.sendLockedStatusToServer) this.set('sendLockedStatusToServer', opt.sendLockedStatusToServer);
+                if (opt.name) this.set('name', opt.name);
+                if (opt.height) this.set('height', opt.height);
+                if (opt.width) this.set('width', opt.width);
+                if (opt.locked) this.set('locked', opt.locked);
+                if (opt.sendLockedStatusToServer) this.set('sendLockedStatusToServer', opt.sendLockedStatusToServer);
 
                 var This = this;
                 socket = socketio(config.socket);
-                socket.on(This.get('name') + 'setLocked', function(data){
+                socket.on(This.get('name') + 'setLocked', function (data) {
                     This.set('locked', data.locked);
                 });
 
-                this.on('sync', function(){
-                    if(This.get('sendLockedStatusToServer') && !This.get('wasLockedBeforeRequested')) {
+                this.on('sync', function () {
+                    if (This.get('sendLockedStatusToServer') && !This.get('wasLockedBeforeRequested')) {
                         This.on('change:locked', This.updateLockstatus, This);
 
                         This.updateLockstatus();
@@ -49,12 +49,12 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
             },
 
             err: function (err) {
-                if(err.code != 0) // "No unlocked image found" ==> that is not a error we want to handle here
+                if (err.code != 0) // "No unlocked image found" ==> that is not a error we want to handle here
                     errorController.show('Error while parsing image response from server, error: ' + JSON.stringify(err));
             },
 
             updateLockstatus: function () {
-                if(this.updateLockstatusIntervalId)
+                if (this.updateLockstatusIntervalId)
                     clearInterval(this.updateLockstatusIntervalId);
 
                 var locked = this.get('locked'),
@@ -63,10 +63,31 @@ define(['socketio', 'config', 'controllers/ErrorController'], function (socketio
                         socket.emit(name + 'setLocked', {locked: locked});
                     };
 
-                if(locked)
+                if (locked)
                     this.updateLockstatusIntervalId = setInterval(connect, 5000);
 
                 connect();
+            },
+
+            markImage: function (x, y, label, cb) {
+                $.ajax({
+                    type: 'POST',
+                    url: config.api + '/image/' + this.get('name') + '/mark/' + x + '/' + y + '/' + label,
+                    data: {
+                        x: x,
+                        y: y,
+                        label: label
+                    },
+                    success: function (result) {
+                        if(result.err){
+                            return console.log('error'); //TODO handle error
+                        }
+
+                        if(cb){
+                            return cb();
+                        }
+                    }
+                });
             },
 
             updateLockstatusIntervalId: null
