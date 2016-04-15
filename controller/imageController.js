@@ -79,12 +79,31 @@ var ImageController = {
         }
     },
 
+    markImage: function(req, res){
+        var name = req.params['name'];
+        var x = req.params['x'];
+        var y = req.params['y'];
+        var label = req.params['label'];
+        var imagePath = path.join(config.images.absoluteLocation, name);
+
+        //TODO get/set better values
+        var superpixelsize = 100;
+        var compactness = 100;
+        var thr_col_val = 50;
+
+        im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
+            console.log(err);
+
+            res.status(200).send({err: null});
+        });
+    },
+
     loadImages: function (cb) {
         winston.debug('Load images');
 
         var i = 0;
         try {
-            fs.readdirSync(config.images.relativeLocation).forEach(function (file) {
+            fs.readdirSync(config.images.absoluteLocation).forEach(function (file) {
                 var imagePath = path.join(config.images.absoluteLocation, file);
                 if (!fs.lstatSync(imagePath).isDirectory()) {
                     var dim = sizeOf(imagePath);
@@ -98,15 +117,15 @@ var ImageController = {
             // There is no image folder, create it
 
             try {
-                mkdirp.sync(config.images.relativeLocation);
+                mkdirp.sync(config.images.absoluteLocation);
             } catch (e) {
                 // Could not create image folder, return false
 
-                cb(true);
+                return cb(e);
             }
         }
 
-        cb(null);
+        return cb(null);
     },
 
     createLabelsForLoadedImages: function (cb) {
