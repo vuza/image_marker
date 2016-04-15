@@ -117,7 +117,7 @@ var ImageController = {
             // There is no image folder, create it
 
             try {
-                mkdirp.sync(config.images.relativeLocation);
+                mkdirp.sync(config.images.absoluteLocation);
 
                 cb(null);
             } catch (e) {
