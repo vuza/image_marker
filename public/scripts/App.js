@@ -3,6 +3,10 @@ define(['Marionette'], function(Marionette){
         regions: {
             mainRegion: '#mainRegion',
             errorRegion: '#errorRegion'
+        },
+
+        ui: {
+            loadingNotification: '#loadingNotification'
         }
     });
 

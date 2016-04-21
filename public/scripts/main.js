@@ -50,5 +50,13 @@ require.config({
             .on('noUnlockedImageFound', function(){
                 router.navigate('overview', {trigger: true});
             });
+
+        Radio.channel('notificationChannel')
+            .on('loading:show', function(){
+                $(app.ui.loadingNotification).show();
+            })
+            .on('loading:hide', function(){
+                $(app.ui.loadingNotification).hide();
+            });
     }
 });
