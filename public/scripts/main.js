@@ -44,7 +44,10 @@ require.config({
             });
 
         Radio.channel('uiChannel')
-            .on('click:#nextImage', router.showRandomUnlockedImage);
+            .on('click:#nextImage', router.showRandomUnlockedImage)
+            .on('click:#goToOverview', function(){
+                router.navigate('overview', {trigger: true});
+            });
 
         Radio.channel('controllerChannel')
             .on('noUnlockedImageFound', function(){
