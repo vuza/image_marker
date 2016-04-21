@@ -109,3 +109,7 @@ server {
 - 0: 'No unlocked image found'
 - 2: 'Image [name] not found'
 - 3: 'No images found at all'
+
+### Add Images
+Images have to have the following file format: image.[name].[jpg/png]
+This is an implicit requirement, the programm does not check it (yet), but wont work, if file format is different.
