@@ -80,16 +80,20 @@ var ImageController = {
     },
 
     markImage: function(req, res){
+        var superpixelsize = req.params['superpixelsize'];
+        var compactness = req.params['compactness'];
+        var thr_col_val = req.params['thr_col_val'];
         var name = req.params['name'];
         var x = req.params['x'];
         var y = req.params['y'];
         var label = req.params['label'];
         var imagePath = path.join(config.images.absoluteLocation, name);
 
-        //TODO get/set better values
-        var superpixelsize = 100;
-        var compactness = 100;
-        var thr_col_val = 50;
+        console.log(superpixelsize);
+        console.log(compactness);
+        console.log(thr_col_val);
+        console.log(name);
+        console.log(label);
 
         im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
             console.log(err);

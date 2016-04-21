@@ -45,7 +45,7 @@ define(['Marionette'], function (Marionette) {
             },
 
             showImage: function(imageName){
-                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
+                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController', 'controllers/MarkerSettingsController'], function (ImageNavigationLayout, markerController, navigationController, markerSettingsController) {
                     // Create layout and render to main section
                     var imageNavigationLayout = new ImageNavigationLayout();
                     app.mainRegion.show(imageNavigationLayout);
@@ -55,6 +55,9 @@ define(['Marionette'], function (Marionette) {
 
                     // Load Navigation to navigation
                     navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
+
+                    // Load Settings
+                    markerSettingsController.showSettings(imageNavigationLayout.getRegion('settings'));
                 });
             }
         });

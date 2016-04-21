@@ -69,10 +69,10 @@ define(['socketio', 'config', 'controllers/ErrorController', 'jquery'], function
                 connect();
             },
 
-            markImage: function (x, y, label, cb) {
+            markImage: function (superpixelsize, compactness, thr_col_val, x, y, label, cb) {
                 $.ajax({
                     type: 'POST',
-                    url: config.api + '/image/' + this.get('name') + '/mark/' + x + '/' + y + '/' + label,
+                    url: config.api + '/image/' + this.get('name') + '/mark/' + superpixelsize + '/' + compactness + '/' + thr_col_val + '/' + x + '/' + y + '/' + label,
                     data: {
                         x: x,
                         y: y,

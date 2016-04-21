@@ -8,7 +8,7 @@ router.get('/image/:lock', imageController.getRandomUnlockedImage);
 router.get('/image/:name/:lock', imageController.getImage);
 
 // Mark image with name :name
-router.post('/image/:name/mark/:x/:y/:label', imageController.markImage);
+router.post('/image/:name/mark/:superpixelsize/:compactness/:thr_col_val/:x/:y/:label', imageController.markImage);
 
 // Get all images and set lock to :lock
 router.get('/images/:lock', imageController.getImages);
