@@ -24,14 +24,14 @@ public:
     Im_processor_api();
 
     /**
-    * returns a Matrix including Meta information for each Pixel of the image (label, isContour)
+    * returns a Matrix including Meta information for each Pixel of the image
     * @param imgPath path to image
     * @param superpixelsize TODO description
     * @param compactness TODO description
     * @param thr_col_val TODO description
     * @return imgMatrix in JSON format
     */
-    std::string getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val );
+    std::string getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
     /**
      * fills the segment around the x and y coordinate with the given label
@@ -57,10 +57,13 @@ public:
 
     /**
      * prepares the image
-     * creates its label image file and its colored label image file if they does not exist
+     * creates its label image file its colored label image file if they do not exist and the contours file
      * @param imgPath path to image
+     * @param superpixelsize TODO description
+     * @param compactness TODO description
+     * @param thr_col_val TODO description
      */
-    std::string prepareImg(std::string imgPath);
+    std::string prepareImg(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
 private:
 
@@ -76,7 +79,7 @@ private:
     void loadImage(std::string imgPath);
 
     /**
-     * loads the given image and its label image into image and image_labels
+     * loads the given image, its label image and contour image into image and image_labels
      * and calculates the superpixels of the image
      * saves the imgPath into image_path
      * @param imgPath path to image
@@ -105,6 +108,13 @@ private:
     bool createColoredLabelImg();
 
     /**
+     * create and saves the contours image to directory
+     * calcSuperpixels(..) must run before
+     * @return true if successfully created and saved.
+     */
+    bool createContoursImg();
+
+    /**
      * calculates the superpixels of the image
      * image must be loaded before
      * @param superpixelsize TODO description
@@ -121,12 +131,14 @@ private:
 
     string image_labels_path;
     string image_labels_colored_path;
+    string image_labels_contours_path;
     string image_labels_ext = "png";
     string image_labels_colored_ext = "png";
+    string image_labels_contours_ext = "png";
 
     cv::Mat_<cv::Vec3b> image;
     cv::Mat_<unsigned char> image_labels;
-    cv::Mat image_labels_colored;
+    cv::Mat_<cv::Vec4b>  image_labels_colored;
     cv::Mat_<int> image_mask;
 
     //variables for superpixel clustering
