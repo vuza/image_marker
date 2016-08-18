@@ -99,10 +99,10 @@ std::string Im_processor_api::fillAllUnlabeledSegments(std::string imgPath, int 
     return createImgMatrix();
 }
 
-std::string Im_processor_api::prepareImg(std::string imgPath)
+std::string Im_processor_api::prepareImg(std::string imgPath, int superpixelsize, double compactness, int thr_col_val)
 {
     init();
-    loadImage(imgPath);
+    loadImage(imgPath, superpixelsize, compactness, thr_col_val);
 
     return "";
 }
@@ -153,11 +153,13 @@ void Im_processor_api::loadImage(string imgPath)
     }
     labelImgPath += "/labels/";
     image_labels_colored_path = labelImgPath;
+    image_labels_contours_path = labelImgPath;
 
     labelImgPath += "label." + imgNumber + "." + image_labels_ext;
     image_labels_path = labelImgPath;
 
     image_labels_colored_path += "label_colored." + imgNumber + "." + image_labels_colored_ext;
+    image_labels_contours_path += "label_contours." + imgNumber + "." + image_labels_contours_ext;
 
     image = cv::imread(imgPath, CV_LOAD_IMAGE_COLOR);
     image_labels = cv::imread(image_labels_path, CV_LOAD_IMAGE_GRAYSCALE);
@@ -179,6 +181,7 @@ void Im_processor_api::loadImage(string imgPath, int superpixelsize, double comp
 {
     loadImage(imgPath);
     calcSuperpixels(superpixelsize, compactness, thr_col_val);
+    createContoursImg();
 }
 
 std::string Im_processor_api::createImgMatrix()
@@ -200,9 +203,9 @@ std::string Im_processor_api::createImgMatrix()
 
             //calculate label from greyColor
             int label = jvis::getLabel(image_labels(y,x));
-            result+= "\"label\":" + std::to_string(label) + ",";
+            result+= "\"label\":" + std::to_string(label) + "},";
 
-            result+= "\"isContour\": false" + string("},"); //TODO check if true or false
+            //result+= "\"isContour\": false" + string("},"); //TODO check if true or false
         }
     }
     result = result.substr(0, result.length()-1); //remove last ","
@@ -221,9 +224,7 @@ bool Im_processor_api::saveImg()
 
 bool Im_processor_api::createColoredLabelImg()
 {
-
-    image_labels_colored = cv::Mat(image.rows, image.cols, CV_8UC4);
-    image_labels_colored = cv::Scalar(0,0,0,0);
+    image_labels_colored = cv::Mat_<cv::Vec4b>::zeros(image.rows, image.cols);
 
     for (int v=0; v<image_labels.rows; v++)
     {
@@ -238,6 +239,13 @@ bool Im_processor_api::createColoredLabelImg()
     }
 
     cv::imwrite(image_labels_colored_path, image_labels_colored);
+}
+
+bool Im_processor_api::createContoursImg()
+{
+    cv::Mat_<cv::Vec4b> image_labels_contours = cv::Mat_<cv::Vec4b>::zeros(image.rows, image.cols);
+    slic.drawContours(image_labels_contours, spc_labels, 255, 0, 0);
+    cv::imwrite(image_labels_contours_path, image_labels_contours);
 }
 
 void Im_processor_api::calcSuperpixels(int superpixelsize, double compactness, int thr_col_val)

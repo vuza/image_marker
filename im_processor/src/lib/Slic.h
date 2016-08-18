@@ -71,7 +71,7 @@ public:
   cv::Mat_<cv::Vec3d> &getImageLAB() {return im_lab;}
 
   /** draw the contours **/
-  void drawContours(cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels, int r=-1, int g=-1, int b=-1);
+  void drawContours(cv::Mat_<cv::Vec4b> &im_rgb, const cv::Mat_<int> &labels, int r=-1, int g=-1, int b=-1);
 
   /** draw mean colours **/
   void drawMeanColors(cv::Mat_<cv::Vec3b> &im_draw, const cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels, int numlabels);
