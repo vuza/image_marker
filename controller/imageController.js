@@ -145,7 +145,7 @@ var ImageController = {
 
             if (!fs.existsSync(path.join(config.images.absoluteLocation, labelName))) {
                 tasks.push(function (cb) {
-                    im_processor.prepareImg(images[name].path, function () {
+                    im_processor.prepareImg(images[name].path, 10, 10, 25, function () { //TODO set parameter superpixelsize, compactness, thr_col_val
                         images[name].label = labelName;
 
                         cb(null);
