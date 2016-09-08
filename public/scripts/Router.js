@@ -15,7 +15,7 @@ define(['Marionette'], function (Marionette) {
             },
 
             showRandomUnlockedImage: function(){
-                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController'], function (ImageNavigationLayout, markerController, navigationController) {
+                require(['layouts/ImageNavigationLayout', 'controllers/MarkerController', 'controllers/NavigationController', 'controllers/MarkerSettingsController'], function (ImageNavigationLayout, markerController, navigationController, markerSettingsController) {
                     // Create layout
                     var imageNavigationLayout = new ImageNavigationLayout();
 
@@ -27,6 +27,9 @@ define(['Marionette'], function (Marionette) {
 
                     // Load Navigation to navigation
                     navigationController.showNavigation(imageNavigationLayout.getRegion('navigation'));
+
+                    // Load Settings
+                    markerSettingsController.showSettings(imageNavigationLayout.getRegion('settings'));
                 });
             },
 
