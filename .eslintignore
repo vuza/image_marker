@@ -1,0 +1,7 @@
+im_processor/*
+node_modules/*
+deployment/*
+public/css/*
+public/images/*
+public/scripts/vendor/*
+public/scripts/templates/*

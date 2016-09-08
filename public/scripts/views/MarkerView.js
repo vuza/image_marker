@@ -13,7 +13,7 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path
         templateHelpers: function () {
             return {
                 svg: this.image.get('svg')
-            }
+            };
         },
 
         ui: {

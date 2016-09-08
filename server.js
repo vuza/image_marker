@@ -1,9 +1,9 @@
-var router = require('./router'),
-    imageController = require('./controller/imageController'),
-    config = require('./config'),
-    winston = require('winston'),
-    async = require('async'),
-    server = require('express')();
+var router = require('./router');
+var imageController = require('./controller/imageController');
+var config = require('./config');
+var winston = require('winston');
+var async = require('async');
+var server = require('express')();
 
 /**
  * Set up logging
@@ -27,7 +27,9 @@ var registerMiddlewares = function(cb){
 
     server.use('/api/v1/', router);
 
-    if(cb) cb(null);
+    if(cb) {
+        cb(null);
+    }
 };
 
 /**
@@ -37,7 +39,9 @@ var startServer = function(cb){
     server.listen(config.listenPort, function(){
         winston.info('Started listening at ' + config.listenPort);
 
-        if(cb) cb(null);
+        if(cb){
+            cb(null);
+        }
     });
 };
 
@@ -48,8 +52,9 @@ async.series([
     registerMiddlewares,
     startServer
 ], function(err){
-    if(err)
+    if(err){
         winston.error('Error while init and starting server: ' + JSON.stringify(err));
-    else
+    } else{
         winston.info('Finished starting, ready to rock');
+    }
 });

@@ -13,7 +13,9 @@ define(['backbone', 'models/Image', 'config', 'underscore', 'controllers/ErrorCo
         },
 
         parse: function(data){
-            if(data.err) this.err(data.err);
+            if(data.err){
+                this.err(data.err);
+            }
 
             var images = [];
             _.each(data.result, function(imageData){
