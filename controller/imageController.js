@@ -127,7 +127,7 @@ var ImageController = {
         return cb(null);
     },
 
-    createLabelsForLoadedImages: function (cb) {
+    prepareLoadedImages: function (cb) {
         if (!fs.existsSync(config.labels.absoluteLocation)) {
             // No labels ordner, create it!
 
@@ -137,11 +137,13 @@ var ImageController = {
         var tasks = [];
         Object.keys(images).every(function (name) {
             var labelName = 'label_colored.' + ImageController.stripImageFileExtensionAndImagePrefix(images[name].name) + '.png';
+            var contourName = 'label_contours.' + ImageController.stripImageFileExtensionAndImagePrefix(images[name].name) + '.png';
 
             if (!fs.existsSync(path.join(config.images.absoluteLocation, labelName))) {
                 tasks.push(function (cb) {
                     im_processor.prepareImg(images[name].path, 100, 10, 25, function () {
                         images[name].label = labelName;
+                        images[name].contour = contourName;
 
                         cb(null);
                     });
@@ -218,6 +220,16 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height);
 
+        defs.append('pattern')
+            .attr('id', 'contours')
+            .attr('patternUnits', 'userSpaceOnUse')
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .append('image')
+            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, path.join(config.images.publicRelativeLocation, 'labels', image.contour)))
+            .attr('width', image.width)
+            .attr('height', image.height);
+
         svg.append('rect')
             .attr('x', 0)
             .attr('y', 0)
@@ -231,6 +243,13 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .attr('fill', 'url(#label)');
+
+        svg.append('rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', image.width)
+            .attr('height', image.height)
+            .attr('fill', 'url(#contours)');
 
         if (cb) cb(null, d3.select(document.body).html());
     },
