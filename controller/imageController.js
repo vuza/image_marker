@@ -10,6 +10,7 @@ var fs = require('fs'),
     path = require('path'),
     document = require('jsdom').jsdom(),
     extend = require('util')._extend,
+    url = require('url'),
     images = {};
 
 var ImageController = {
@@ -209,7 +210,7 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
-            .attr('xlink:xlink:href', path.join(config.images.publicDomain, config.images.publicRelativeLocation, image.name))
+            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, config.images.publicRelativeLocation, image.name))
             .attr('width', image.width)
             .attr('height', image.height);
 
@@ -219,7 +220,7 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
-            .attr('xlink:xlink:href', path.join(config.images.publicDomain, config.images.publicRelativeLocation, 'labels', image.label))
+            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, config.images.publicRelativeLocation, 'labels', image.label))
             .attr('width', image.width)
             .attr('height', image.height);
 
