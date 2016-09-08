@@ -91,7 +91,21 @@ var ImageController = {
         var imagePath = path.join(config.images.absoluteLocation, name);
 
         im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
-            console.log(err);
+            console.log(err); //TODO stderr !?
+
+            res.status(200).send({err: null});
+        });
+    },
+
+    reloadContours: function(req, res){
+        var superpixelsize = req.params['superpixelsize'];
+        var compactness = req.params['compactness'];
+        var thr_col_val = req.params['thr_col_val'];
+        var name = req.params['name'];
+        var imagePath = path.join(config.images.absoluteLocation, name);
+
+        im_processor.prepareImg(imagePath, superpixelsize, compactness, thr_col_val, function (err) {
+            console.log(err); //TODO stderr !?
 
             res.status(200).send({err: null});
         });

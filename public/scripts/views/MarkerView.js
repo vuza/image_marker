@@ -60,6 +60,28 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path
                 notificationChannel.trigger('loading:hide');
                 MarkerView.loading = false;
             });
+        },
+
+        reloadContours: function(){
+            var $image = $(this.ui.image);
+
+            // Lock view and show loading
+            notificationChannel.trigger('loading:show');
+            MarkerView.loading = true;
+
+            // Request labeling parameter
+            var superpixelsize = settingsChannel.request('superpixelsize');
+            var compactness = settingsChannel.request('compactness');
+            var thr_col_val = settingsChannel.request('thr_col_val');
+
+            this.image.reloadContours(superpixelsize, compactness, thr_col_val, function(){
+                var $contours = $image.find('defs #contours image');
+                $contours.attr('xlink:href', $contours.attr('xlink:href') + '?cachebreaker=' + new Date().getTime());
+
+                // Unlock view and hide loading
+                notificationChannel.trigger('loading:hide');
+                MarkerView.loading = false;
+            });
         }
     });
 

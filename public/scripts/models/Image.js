@@ -90,6 +90,22 @@ define(['socketio', 'config', 'controllers/ErrorController', 'jquery'], function
                 });
             },
 
+            reloadContours: function(superpixelsize, compactness, thr_col_val, cb){
+                $.ajax({
+                    type: 'POST',
+                    url: config.api + '/image/' + this.get('name') + '/reloadContours/' + superpixelsize + '/' + compactness + '/' + thr_col_val,
+                    success: function(result){
+                        if(result.err){
+                            return console.log('error'); //TODO handle error
+                        }
+
+                        if(cb){
+                            return cb();
+                        }
+                    }
+                });
+            },
+
             updateLockstatusIntervalId: null
         });
 

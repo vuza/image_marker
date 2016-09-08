@@ -61,11 +61,16 @@ define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], fun
                     // Show image
                     showImage
                 ]);
+            },
+
+            reloadContours: function(){
+                MarkerController.markerView.reloadContours();
             }
         });
 
     var showImage = function(image, cb){
-        MarkerController.region.show(new MarkerView(image));
+        MarkerController.markerView = new MarkerView(image);
+        MarkerController.region.show(MarkerController.markerView);
         cb(null, image);
     };
 

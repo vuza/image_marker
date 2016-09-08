@@ -16,8 +16,8 @@ require.config({
         Radio: 'vendor/bower/backbone.radio/build/backbone.radio',
         config: 'config'
     },
-    deps: ['Marionette', 'backbone', 'Router', 'App', 'Radio'],
-    callback: function (Marionette, Backbone, Router, App, Radio) {
+    deps: ['Marionette', 'backbone', 'Router', 'App', 'Radio', 'controllers/MarkerController'],
+    callback: function (Marionette, Backbone, Router, App, Radio, MarkerController) {
         var app = new App();
 
         app.on('before:start', function () {
@@ -60,6 +60,11 @@ require.config({
             })
             .on('loading:hide', function(){
                 $(app.ui.loadingNotification).hide();
+            });
+
+        Radio.channel('settingsChannel')
+            .on('settingsChanged', function(){
+                MarkerController.reloadContours();
             });
     }
 });

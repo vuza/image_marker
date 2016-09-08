@@ -15,6 +15,12 @@ define(['tpl!templates/markerSettingsView.tpl', 'Marionette', 'Radio', 'jquery']
             label: '#label'
         },
 
+        events: {
+            'change @ui.thr_col_val, @ui.compactness, @ui.superpixelsize': function(){
+                settingsChannel.trigger('settingsChanged');
+            }
+        },
+
         onShow: function(){
             settingsChannel.reply('superpixelsize', function(){
                 return $(MarkerView.ui.superpixelsize).val()

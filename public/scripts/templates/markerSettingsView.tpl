@@ -4,7 +4,7 @@
 <label for="compactness">Compactness</label>
 <input id="compactness" type="number" min="0" max="100" step="1" value="10">
 
-<label for="thr_col_val">thr_col_val (?)</label>
+<label for="thr_col_val">Threshold Color Value</label>
 <input id="thr_col_val" type="number" min="0" max="100" step="1" value="25">
 
 <label for="label">Label</label>
