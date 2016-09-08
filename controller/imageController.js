@@ -90,12 +90,6 @@ var ImageController = {
         var label = req.params['label'];
         var imagePath = path.join(config.images.absoluteLocation, name);
 
-        console.log(superpixelsize);
-        console.log(compactness);
-        console.log(thr_col_val);
-        console.log(name);
-        console.log(label);
-
         im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
             console.log(err);
 
