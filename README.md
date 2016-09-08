@@ -86,8 +86,30 @@ ansible-playbook deployment/playbook.yml -u <your-user>
 You can omit the -u parameter if your local user is equal to remote user at alagoda.at, ansible will always ask you for sudo and ssh password.
 The script installs the app at alagoda.at, the frontend is reachable via im.alagoda.at
 
+### Nginx Setup
+We use ngnix for serving static frontend files. Make sure html push-state URLs work properly. Example nginx setup:
+
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name im.localhost;
+    location / {
+        root /home/marlon/Documents/Bac/prototype/public/;
+        index index.html;
+        if (!-e $request_filename){
+            rewrite ^(.*)$ /index.html break;
+        }
+    }
+}
+```
+
 ## Guidelines
-### Error Codes
+### Exploited Errors
 - 0: 'No unlocked image found'
-- 1: 'Could no load image matrix'
 - 2: 'Image [name] not found'
+- 3: 'No images found at all'
+
+### Add Images
+Images have to have the following file format: image.[name].[jpg/png]
+This is an implicit requirement, the programm does not check it (yet), but wont work, if file format is different.

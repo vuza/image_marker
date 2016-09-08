@@ -16,7 +16,33 @@ include_directories(${Boost_INCLUDE_DIR})
 include_directories(${CMAKE_JS_INC})
 
 # Declare the location of the source files
-file(GLOB SOURCE_FILES "src/*.cc" "src/*.h" "src/lib/*.cc" "src/lib/*.hpp" "src/lib/*.cpp" "src/lib/*.h")
+#file(GLOB SOURCE_FILES "src/*.cc" "src/*.h" "src/lib/*.cc" "src/lib/*.hpp" "src/lib/*.cpp" "src/lib/*.h")
+file(GLOB SOURCE_FILES
+        "src/lib/DataContainer.hh"
+        "src/lib/RecursiveSuperpixelClustering.hh"
+        "src/lib/Slic.h"
+        "src/lib/toString.hpp"
+        "src/lib/ColorMap.hpp"
+        "src/lib/DataMatrix2D.hpp"
+        "src/lib/FilesystemUtils.hh"
+        "src/lib/SmartPtr.hpp"
+        "src/lib/Vector.hpp"
+        "src/lib/im_processor_api.h"
+        "src/prepareImg.h"
+        "src/getImageMatrix.h"
+        "src/fillSegment.h"
+        "src/fillAllUnlabeledSegments.h"
+        "src/lib/FilesystemUtils.cc"
+        "src/lib/RecursiveSuperpixelClustering.cc"
+        "src/lib/ColorMap.cc"
+        "src/lib/Slic.cpp"
+        "src/lib/im_processor_api.cpp"
+        "src/prepareImg.cc"
+        "src/getImageMatrix.cc"
+        "src/fillSegment.cc"
+        "src/fillAllUnlabeledSegments.cc"
+        "src/im_processor.cc"
+        )
 
 # This line will tell CMake that we're building a shared library
 # from the above source files

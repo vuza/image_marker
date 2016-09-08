@@ -1,62 +1,87 @@
-define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor'], function(markerView, Marionette, d3, randomColor) {
+define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path', 'config', 'jquery', 'Radio'], function (markerView, Marionette, d3, randomColor, path, config, $, Radio) {
+    var settingsChannel = Radio.channel('settingsChannel');
+    var notificationChannel = Radio.channel('notificationChannel');
+
     var MarkerView = Marionette.ItemView.extend({
         template: markerView,
 
-        initialize: function(image){
+        initialize: function (image) {
             this.image = image;
+            MarkerView = this;
         },
 
-        onRender: function(){this.createSvg(); return this},
-
-        onDestroy: function(){
-            this.image.set('locked', false);
-        },
-
-        attributes: function () {
+        templateHelpers: function () {
             return {
-                'id': 'markerView'
+                svg: this.image.get('svg')
             }
         },
 
-        createSvg: function(){
-            // create the svg
-            var svg = d3.select(this.el).append("svg")
-                .attr('width', this.image.get('width'))
-                .attr('height', this.image.get('height'))
-                .append("g");
+        ui: {
+            image: 'svg'
+        },
 
-            // add the image
-            var defs = svg.append("defs");
+        events: {
+            'click': 'markImage'
+        },
 
-            defs.append('pattern')
-                .attr('id', 'image')
-                .attr('patternUnits', 'userSpaceOnUse')
-                .attr('width', this.image.get('width'))
-                .attr('height', this.image.get('height'))
-                .append('image')
-                .attr('xlink:href', '/images/' + this.image.get('name'))
-                .attr('width', this.image.get('width'))
-                .attr('height', this.image.get('height'));
+        onDestroy: function () {
+            this.image.set('locked', false);
+        },
 
-            svg.append('rect')
-                .attr('x', 0)
-                .attr('y', 0)
-                .attr('width', this.image.get('width'))
-                .attr('height', this.image.get('height'))
-                .attr('fill', 'url(#image)');
+        markImage: function (event) {
+            // If image is locked, don't let user mark it
+            if(!$.contains(this.ui.image[0], event.target) || MarkerView.loading){
+                return;
+            }
 
-            // Do not load matrix, since it is not good up to now
-            /*svg.selectAll('.dot')
-                .data(this.image.get('matrix'))
-                .enter().append('circle')
-                .attr('class', 'dot')
-                .attr('r', 1)
-                .attr('cx', function(d) { return d.x; })
-                .attr('cy', function(d) { return d.y; })
-                .style('fill', function(){ return randomColor({
-                    format: 'hex'
-                }); })
-                .attr('fill-opacity', function(){ return Math.random() * (1 - 0.2) + 0.2; });*/
+            var $image = $(this.ui.image);
+            var imageOffset = $image.offset();
+            var absoluteClickPosition = {x: event.clientX, y: event.clientY};
+            var relativeClickPosition = {
+                x: absoluteClickPosition.x - imageOffset.left,
+                y: absoluteClickPosition.y - imageOffset.top
+            };
+
+            // Request labeling parameter
+            var superpixelsize = settingsChannel.request('superpixelsize');
+            var compactness = settingsChannel.request('compactness');
+            var thr_col_val = settingsChannel.request('thr_col_val');
+            var label = settingsChannel.request('label');
+
+            // Lock view and show loading
+            notificationChannel.trigger('loading:show');
+            MarkerView.loading = true;
+
+            this.image.markImage(superpixelsize, compactness, thr_col_val, relativeClickPosition.x, relativeClickPosition.y, label, function(){
+                var $label = $image.find('defs #label image');
+                $label.attr('xlink:href', $label.attr('xlink:href') + '?cachebreaker=' + new Date().getTime());
+
+                // Unlock view and hide loading
+                notificationChannel.trigger('loading:hide');
+                MarkerView.loading = false;
+            });
+        },
+
+        reloadContours: function(){
+            var $image = $(this.ui.image);
+
+            // Lock view and show loading
+            notificationChannel.trigger('loading:show');
+            MarkerView.loading = true;
+
+            // Request labeling parameter
+            var superpixelsize = settingsChannel.request('superpixelsize');
+            var compactness = settingsChannel.request('compactness');
+            var thr_col_val = settingsChannel.request('thr_col_val');
+
+            this.image.reloadContours(superpixelsize, compactness, thr_col_val, function(){
+                var $contours = $image.find('defs #contours image');
+                $contours.attr('xlink:href', $contours.attr('xlink:href') + '?cachebreaker=' + new Date().getTime());
+
+                // Unlock view and hide loading
+                notificationChannel.trigger('loading:hide');
+                MarkerView.loading = false;
+            });
         }
     });
 

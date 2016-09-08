@@ -4,7 +4,8 @@ define(['Marionette', 'tpl!templates/imageNavigationLayout.tpl'], function(Mario
 
         regions: {
             image: '#image',
-            navigation: '#navigation'
+            navigation: '#navigation',
+            settings: '#settings'
         }
     });
 

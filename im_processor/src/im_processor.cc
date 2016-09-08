@@ -2,6 +2,7 @@
 #include "getImageMatrix.h"
 #include "fillSegment.h"
 #include "fillAllUnlabeledSegments.h"
+#include "prepareImg.h"
 
 using v8::FunctionTemplate;
 using v8::Handle;
@@ -20,6 +21,9 @@ NAN_MODULE_INIT(InitAll) {
 
   Set(target, New<String>("fillAllUnlabeledSegments").ToLocalChecked(),
     GetFunction(New<FunctionTemplate>(FillAllUnlabeledSegments)).ToLocalChecked());
+
+  Set(target, New<String>("prepareImg").ToLocalChecked(),
+    GetFunction(New<FunctionTemplate>(PrepareImg)).ToLocalChecked());
 }
 
 NODE_MODULE(im_processor, InitAll)

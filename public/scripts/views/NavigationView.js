@@ -14,11 +14,17 @@ define(['tpl!templates/navigationView.tpl', 'Marionette', 'Radio'], function(nav
             },
 
             ui: {
-                nextImage: '#nextImage'
+                nextImage: '#nextImage',
+                goToOverview: '#goToOverview'
             },
 
             events: {
-                'click @ui.nextImage': function(){ uiChannel.trigger('click:#nextImage'); }
+                'click @ui.nextImage': function(){
+                    uiChannel.trigger('click:#nextImage');
+                },
+                'click @ui.goToOverview': function(){
+                    uiChannel.trigger('click:#goToOverview');
+                }
             }
         });
 

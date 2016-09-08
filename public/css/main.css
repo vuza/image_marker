@@ -14,3 +14,58 @@ body{
 #nextImage{
     cursor: pointer;
 }
+
+.imageView{
+    position: relative;
+    display: inline-block;
+}
+
+#overview{
+    width: 100%;
+    max-width: 900px;
+}
+
+#overview .image{
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    display: block;
+}
+
+.lockOverview{
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 0, 0, 0.56);
+}
+
+.imageView.locked .lockOverview {
+    display: block;
+}
+
+#overview > .inner {
+    text-align: center;
+}
+
+[waslockedbeforerequested="true"] .lockOverview {
+    display: block;
+}
+
+#image{
+    position: relative;
+}
+
+#image svg{
+    cursor: pointer;
+}
+
+#loadingNotification{
+    display: none;
+}
+
+#loadingNotification.show{
+    display: block;
+}

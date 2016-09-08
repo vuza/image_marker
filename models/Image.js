@@ -3,30 +3,50 @@ var config = require('./../config'),
     io = require('socket.io')(config.socket.port);
 
 // It is wrapped in a function, so we can use JS new operator
-module.exports = function(name, locked, width, height){
+module.exports = function(name, locked, width, height, path){
+    /**
+     * Private vars
+     */
     var setLockedRecently = false,
-        image = {
-            name: name,
-            locked: locked,
-            width: width,
-            height: height
-        };
+        sockets = {},
+        This = this;
 
+    /**
+     * Public vars
+     */
+    this.name = name;
+    this.locked = locked;
+    this.width = width;
+    this.height = height;
+    this.path = path;
+
+    /**
+     * Private logic
+     */
     io.on('connection', function(socket){
-        socket.on(image.name + 'setLocked', function(data){
-            setLockedRecently = image.locked = data.locked;
+        sockets[socket.conn.id] = socket;
 
-            winston.verbose('[received] ' + image.name + ', locked: ' + data.locked);
+        socket.on(This.name + 'setLocked', function(data){
+            setLockedRecently = This.locked = data.locked;
+
+            winston.verbose('[received] ' + This.name + ', locked: ' + data.locked);
+        });
+
+        socket.on('disconnect', function() {
+            if(sockets[socket.conn.id])
+                delete sockets[socket.conn.id];
         });
     });
 
     // Check lock status
     setInterval(function(){
-        image.locked = setLockedRecently;
+        This.locked = setLockedRecently;
         setLockedRecently = false;
 
-        winston.verbose('[update status] ' + image.name + ', locked: ' + image.locked);
-    }, 11000);
+        Object.keys(sockets).forEach(function(id){
+            sockets[id].emit(This.name + 'setLocked', {locked: This.locked});
+        });
 
-    return image;
+        winston.verbose('[update status] ' + This.name + ', locked: ' + This.locked);
+    }, 11000);
 };
