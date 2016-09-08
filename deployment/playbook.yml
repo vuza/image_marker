@@ -19,6 +19,9 @@
   - name: install backend/npm dependencies
     npm: path={{ root }}
 
+  - name: remove current im_processor build if existing
+    file: path={{ root }}/im_processor/build state=absent
+
   - name: install im_processor
     npm: path={{ root }}/im_processor
 
@@ -36,6 +39,12 @@
       dest={{ root }}/public/scripts/config.js
       regexp="socket:(.*)"
       replace="socket:'http://alagoda.at:3000',"
+
+  - name: replace frontend config (3)
+    replace:
+      dest={{ root }}/config.js
+      regexp="publicDomain:(.*)"
+      replace="publicDomain:'http://im.alagoda.at',"
 
   - name: Stop Node.js app
     command: forever stop {{ root }}/server.js
