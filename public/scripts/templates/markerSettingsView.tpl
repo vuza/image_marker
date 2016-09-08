@@ -1,11 +1,11 @@
 <label for="superpixelsize">Superpixel Size</label>
-<input id="superpixelsize" type="number" min="0" max="100" step="1" value="50">
+<input id="superpixelsize" type="number" min="0" max="100" step="1" value="100">
 
 <label for="compactness">Compactness</label>
-<input id="compactness" type="number" min="0" max="100" step="1" value="50">
+<input id="compactness" type="number" min="0" max="100" step="1" value="10">
 
 <label for="thr_col_val">thr_col_val (?)</label>
-<input id="thr_col_val" type="number" min="0" max="100" step="1" value="50">
+<input id="thr_col_val" type="number" min="0" max="100" step="1" value="25">
 
 <label for="label">Label</label>
 <select id="label">
