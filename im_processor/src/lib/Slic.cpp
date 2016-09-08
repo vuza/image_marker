@@ -368,7 +368,7 @@ void Slic::segmentSuperpixelNumber(const cv::Mat_<cv::Vec3b> &im_rgb,
 /**
  * drawContours
  */
-void Slic::drawContours(cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels, int r, int g, int b)
+void Slic::drawContours(cv::Mat_<cv::Vec4b> &im_rgba, const cv::Mat_<int> &labels, int r, int g, int b)
 {
 	const int dx8[8] = {-1, -1,  0,  1, 1, 1, 0, -1};
 	const int dy8[8] = { 0, -1, -1, -1, 0, 1, 1,  1};
@@ -376,8 +376,8 @@ void Slic::drawContours(cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels
   bool have_col=false;
   if (r!=-1 && g!=-1 && b!=-1) have_col=true;
 
-  int width = im_rgb.cols;
-  int height = im_rgb.rows;
+  int width = im_rgba.cols;
+  int height = im_rgba.rows;
 	int sz = width*height;
 	vector<bool> istaken(sz, false);
 	vector<int> contourx(sz);
@@ -419,8 +419,8 @@ void Slic::drawContours(cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels
 	for( int j = 0; j < numboundpix; j++ )
 	{
 		int ii = contoury[j]*width + contourx[j];
-    if (have_col) im_rgb(ii) = cv::Vec3b(b,g,r);
-		else im_rgb(ii) = cv::Vec3b(255,255,255);
+    if (have_col) im_rgba(ii) = cv::Vec4b(b,g,r, 255);
+		else im_rgba(ii) = cv::Vec4b(255,255,255,255);
 
 		for( int n = 0; n < 8; n++ )
 		{
@@ -429,7 +429,7 @@ void Slic::drawContours(cv::Mat_<cv::Vec3b> &im_rgb, const cv::Mat_<int> &labels
 			if( (x >= 0 && x < width) && (y >= 0 && y < height) )
 			{
 				int ind = y*width + x;
-				if(!have_col && !istaken[ind]) im_rgb(ind) = cv::Vec3b(0,0,0);
+				if(!have_col && !istaken[ind]) im_rgba(ind) = cv::Vec4b(0,0,0,255);
 			}
 		}
 	}
