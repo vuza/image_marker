@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
     images: {
-        publicDomain: 'http://im.localhost',
+        publicDomain: 'http://im.alagoda.at',
         publicRelativeLocation: '/images',
         absoluteLocation: path.join(path.dirname(process.mainModule.filename), '/public/images/')
     },
