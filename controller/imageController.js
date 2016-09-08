@@ -210,7 +210,7 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
-            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, config.images.publicRelativeLocation, image.name))
+            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, path.join(config.images.publicRelativeLocation, image.name)))
             .attr('width', image.width)
             .attr('height', image.height);
 
@@ -220,7 +220,7 @@ var ImageController = {
             .attr('width', image.width)
             .attr('height', image.height)
             .append('image')
-            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, config.images.publicRelativeLocation, 'labels', image.label))
+            .attr('xlink:xlink:href', url.resolve(config.images.publicDomain, path.join(config.images.publicRelativeLocation, 'labels', image.label)))
             .attr('width', image.width)
             .attr('height', image.height);
 
