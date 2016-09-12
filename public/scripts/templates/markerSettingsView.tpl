@@ -13,7 +13,13 @@
 <div class="form-group">
     <label for="label">Label</label>
     <select id="label">
-        <option value="1">Test Label 1</option>
-        <option value="2">Test Label 2</option>
+        <option value="1">Erde</option>
+        <option value="2">Kulturpflanze</option>
+        <option value="3">Großer Ampfer</option>
+        <option value="4">Sonstige lebende organische Masse</option>
+        <option value="5">Tote organische Masse</option>
+        <option value="6">Steine</option>
+        <option value="7">Erde mit grünem Biofilm</option>
+        <option value="8">Undefined</option>
     </select>
 </div>
