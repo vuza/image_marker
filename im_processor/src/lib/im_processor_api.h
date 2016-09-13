@@ -26,9 +26,9 @@ public:
     /**
     * returns a Matrix including Meta information for each Pixel of the image
     * @param imgPath path to image
-    * @param superpixelsize TODO description
-    * @param compactness TODO description
-    * @param thr_col_val TODO description
+    * @param superpixelsize - size of a superpixel
+    * @param compactness of superpixel (more compact - less neighbours)
+    * @param thr_col_val - similarity threshold
     * @return imgMatrix in JSON format
     */
     std::string getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
@@ -37,31 +37,33 @@ public:
      * fills the segment around the x and y coordinate with the given label
      * @param imgPath path to image
      * @param label the label to fill the segment with
-     * @param superpixelsize TODO description
-     * @param compactness TODO description
-     * @param thr_col_val TODO description
+     * @param superpixelsize - size of a superpixel
+     * @param compactness of superpixel (more compact - less neighbours)
+     * @param thr_col_val - similarity threshold
      * @return imgMatrix in JSON format
      */
-    std::string fillSegment(std::string imgPath, int x, int y, int label, int superpixelsize, double compactness, int thr_col_val);
+    std::string fillSegment(std::string imgPath, int x, int y, int label, int superpixelsize, double compactness,
+                            int thr_col_val);
 
     /**
      * fills all unlabeledSegments with the given label
      * @param imgPath path to image
      * @param label the label to fill the segments with
-     * @param superpixelsize TODO description
-     * @param compactness TODO description
-     * @param thr_col_val TODO description
+     * @param superpixelsize - size of a superpixel
+     * @param compactness of superpixel (more compact - less neighbours)
+     * @param thr_col_val - similarity threshold
      * @return imgMatrix in JSON format
      */
-    std::string fillAllUnlabeledSegments(std::string imgPath, int label, int superpixelsize, double compactness, int thr_col_val);
+    std::string fillAllUnlabeledSegments(std::string imgPath, int label, int superpixelsize, double compactness,
+                                         int thr_col_val);
 
     /**
      * prepares the image
      * creates its label image file its colored label image file if they do not exist and the contours file
      * @param imgPath path to image
-     * @param superpixelsize TODO description
-     * @param compactness TODO description
-     * @param thr_col_val TODO description
+     * @param superpixelsize - size of a superpixel
+     * @param compactness of superpixel (more compact - less neighbours)
+     * @param thr_col_val - similarity threshold
      */
     std::string prepareImg(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
@@ -83,9 +85,9 @@ private:
      * and calculates the superpixels of the image
      * saves the imgPath into image_path
      * @param imgPath path to image
-     * @param superpixelsize TODO description
-     * @param compactness TODO description
-     * @param thr_col_val TODO description
+     * @param superpixelsize - size of a superpixel
+     * @param compactness of superpixel (more compact - less neighbours)
+     * @param thr_col_val - similarity threshold
      */
     void loadImage(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
@@ -95,6 +97,7 @@ private:
      * @return imgMatrix in JSON format
      */
     std::string createImgMatrix();
+
     /**
      * saves the loaded image, its label file and the colored label file to directory
      * @return true if successfully saved
@@ -117,9 +120,9 @@ private:
     /**
      * calculates the superpixels of the image
      * image must be loaded before
-     * @param superpixelsize TODO description
-     * @param compactness TODO description
-     * @param thr_col_val TODO description
+     * @param superpixelsize - size of a superpixel
+     * @param compactness of superpixel (more compact - less neighbours)
+     * @param thr_col_val - similarity threshold
      */
     void calcSuperpixels(int superpixelsize, double compactness, int thr_col_val);
 
@@ -138,7 +141,7 @@ private:
 
     cv::Mat_<cv::Vec3b> image;
     cv::Mat_<unsigned char> image_labels;
-    cv::Mat_<cv::Vec4b>  image_labels_colored;
+    cv::Mat_<cv::Vec4b> image_labels_colored;
     cv::Mat_<int> image_mask;
 
     //variables for superpixel clustering
