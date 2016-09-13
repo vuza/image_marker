@@ -23,7 +23,9 @@
     file: path={{ root }}/im_processor/build state=absent
 
   - name: install im_processor
-    npm: path={{ root }}/im_processor
+    shell: npm install
+    args:
+      chdir: "{{ root }}/im_processor"
 
   - name: install frontend/bower dependencies
     bower: path={{ root }}

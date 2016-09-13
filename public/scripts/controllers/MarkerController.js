@@ -1,72 +1,74 @@
 define(['Marionette', 'views/MarkerView', 'models/Image', 'async', 'Radio'], function (Marionette, MarkerView, Image, async, Radio) {
-    var controllerChannel = Radio.channel('controllerChannel'),
-        MarkerController = Marionette.Object.extend({
-            showRandomUnlockedImage: function (region) {
-                MarkerController.region = region;
+    var controllerChannel = Radio.channel('controllerChannel');
+    var MarkerController = Marionette.Object.extend({
+        showRandomUnlockedImage: function (region) {
+            MarkerController.region = region;
 
-                var image = new Image({
-                    sendLockedStatusToServer: true
-                });
+            var image = new Image({
+                sendLockedStatusToServer: true
+            });
 
-                async.waterfall([
-                    // Load image
-                    function (cb) {
-                        image.fetch({
-                            success: function (image) {
-                                cb(null, image);
-                            }
-                        });
-                    },
-                    // Check if got image from server
-                    function(image, cb){
-                        if(image.get('name') == '')
-                            controllerChannel.trigger('noUnlockedImageFound');
-
-                        cb(null, image);
-                    },
-                    // Show image
-                    showImage,
-                    // Set url
-                    function(image, cb){
-                        Radio.channel('router').trigger('changeUrl', '/image/' + image.get('name'));
-                        cb(null);
+            async.waterfall([
+                // Load image
+                function (cb) {
+                    image.fetch({
+                        success: function (image) {
+                            cb(null, image);
+                        }
+                    });
+                },
+                // Check if got image from server
+                function(image, cb){
+                    if(image.get('name') == ''){
+                        controllerChannel.trigger('noUnlockedImageFound');
                     }
-                ]);
-            },
 
-            showImage: function(imageName, region){
-                MarkerController.region = region;
+                    cb(null, image);
+                },
+                // Show image
+                showImage,
+                // Set url
+                function(image, cb){
+                    Radio.channel('router').trigger('changeUrl', '/image/' + image.get('name'));
+                    cb(null);
+                }
+            ]);
+        },
 
-                var image = new Image({
-                    sendLockedStatusToServer: true,
-                    name: imageName
-                });
+        showImage: function(imageName, region){
+            MarkerController.region = region;
 
-                async.waterfall([
-                    // Load image
-                    function (cb) {
-                        image.fetch({
-                            success: function (image) {
-                                cb(null, image);
-                            }
-                        });
-                    },
-                    // Check if got image from server
-                    function(image, cb){
-                        if(image.get('name') == '')
-                            controllerChannel.trigger('noUnlockedImageFound');
+            var image = new Image({
+                sendLockedStatusToServer: true,
+                name: imageName
+            });
 
-                        cb(null, image);
-                    },
-                    // Show image
-                    showImage
-                ]);
-            },
+            async.waterfall([
+                // Load image
+                function (cb) {
+                    image.fetch({
+                        success: function (image) {
+                            cb(null, image);
+                        }
+                    });
+                },
+                // Check if got image from server
+                function(image, cb){
+                    if(image.get('name') == ''){
+                        controllerChannel.trigger('noUnlockedImageFound');
+                    }
 
-            reloadContours: function(){
-                MarkerController.markerView.reloadContours();
-            }
-        });
+                    cb(null, image);
+                },
+                // Show image
+                showImage
+            ]);
+        },
+
+        reloadContours: function(){
+            MarkerController.markerView.reloadContours();
+        }
+    });
 
     var showImage = function(image, cb){
         MarkerController.markerView = new MarkerView(image);

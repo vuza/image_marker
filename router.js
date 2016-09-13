@@ -1,5 +1,5 @@
-var router = require('express').Router(),
-    imageController = require('./controller/imageController');
+var router = require('express').Router();
+var imageController = require('./controller/imageController');
 
 // Returns any free picture and sets lock to :lock
 router.get('/image/:lock', imageController.getRandomUnlockedImage);

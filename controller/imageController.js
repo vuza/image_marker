@@ -1,17 +1,17 @@
-var fs = require('fs'),
-    sizeOf = require('image-size'),
-    im_processor = require('./../im_processor/build/Release/im_processor'),
-    Image = require('./../models/Image'),
-    mkdirp = require('mkdirp'),
-    config = require('./../config'),
-    winston = require('winston'),
-    async = require('async'),
-    d3 = require('d3'),
-    path = require('path'),
-    document = require('jsdom').jsdom(),
-    extend = require('util')._extend,
-    url = require('url'),
-    images = {};
+var fs = require('fs');
+var sizeOf = require('image-size');
+var im_processor = require('./../im_processor/build/Release/im_processor');
+var Image = require('./../models/Image');
+var mkdirp = require('mkdirp');
+var config = require('./../config');
+var winston = require('winston');
+var async = require('async');
+var d3 = require('d3');
+var path = require('path');
+var document = require('jsdom').jsdom();
+var extend = require('util')._extend;
+var url = require('url');
+var images = {};
 
 var ImageController = {
     getRandomUnlockedImage: function (req, res) {
@@ -26,8 +26,9 @@ var ImageController = {
 
                 image.wasLockedBeforeRequested = image.locked || false;
 
-                if (lock)
+                if (lock){
                     image.locked = true;
+                }
 
                 return false;
             }
@@ -44,26 +45,26 @@ var ImageController = {
     },
 
     getImage: function (req, res) {
-        var image = images[req.params['name']],
-            lock = (req.params['lock'] == 'true');
+        var image = images[req.params['name']];
+        var lock = (req.params['lock'] == 'true');
 
         winston.verbose('Get image: ' + image);
 
         if (image) {
             image.wasLockedBeforeRequested = image.locked || false;
 
-            if (lock)
+            if (lock){
                 image.locked = true;
+            }
 
             res.status(200).send({err: null, result: ImageController.stripPrivateImageInfo(image)});
-        } else
+        } else{
             res.status(200).send({err: {msg: 'Image ' + req.params['name'] + ' not found', code: 2}, result: null});
+        }
     },
 
     getImages: function (req, res) {
         winston.verbose('Getting images');
-
-        var lock = (req.params['lock'] == 'true');
 
         var tmp_images = [];
 
@@ -91,7 +92,7 @@ var ImageController = {
         var imagePath = path.join(config.images.absoluteLocation, name);
 
         im_processor.fillSegment(imagePath, x, y, label, superpixelsize, compactness, thr_col_val, function(err){
-            console.log(err); //TODO stderr !?
+            console.error(err);
 
             res.status(200).send({err: null});
         });
@@ -105,7 +106,7 @@ var ImageController = {
         var imagePath = path.join(config.images.absoluteLocation, name);
 
         im_processor.prepareImg(imagePath, superpixelsize, compactness, thr_col_val, function (err) {
-            console.log(err); //TODO stderr !?
+            console.error(err);
 
             res.status(200).send({err: null});
         });
@@ -114,7 +115,6 @@ var ImageController = {
     loadImages: function (cb) {
         winston.debug('Load images');
 
-        var i = 0;
         try {
             fs.readdirSync(config.images.absoluteLocation).forEach(function (file) {
                 var imagePath = path.join(config.images.absoluteLocation, file);
@@ -122,8 +122,6 @@ var ImageController = {
                     var dim = sizeOf(imagePath);
 
                     images[file] = new Image(file, false, dim['width'], dim['height'], imagePath);
-
-                    i++;
                 }
             });
         } catch (e) {
@@ -202,17 +200,17 @@ var ImageController = {
     createSvg: function (image, cb) {
         winston.debug('create svg');
 
-        d3.select(document.body).html("");
+        d3.select(document.body).html('');
 
         // create the svg
-        var svg = d3.select(document.body).append("svg")
+        var svg = d3.select(document.body).append('svg')
             .attr('width', image.width)
             .attr('height', image.height);
 
         svg.append('g');
 
         // add the image
-        var defs = svg.append("defs");
+        var defs = svg.append('defs');
 
         defs.append('pattern')
             .attr('id', 'image')
@@ -265,7 +263,9 @@ var ImageController = {
             .attr('height', image.height)
             .attr('fill', 'url(#contours)');
 
-        if (cb) cb(null, d3.select(document.body).html());
+        if (cb){
+            cb(null, d3.select(document.body).html());
+        }
     },
 
     stripPrivateImageInfo: function (image) {

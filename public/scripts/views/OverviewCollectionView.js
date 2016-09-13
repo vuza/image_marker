@@ -5,10 +5,11 @@ define(['tpl!templates/imageView.tpl', 'config', 'path', 'Radio'], function(imag
         initialize: function(){
             var This = this;
             this.listenTo(This.model, 'change:locked', function(){
-                if(This.model.get('locked'))
+                if(This.model.get('locked')){
                     $(This.$el).addClass('locked');
-                else
+                } else{
                     $(This.$el).removeClass('locked');
+                }
             });
         },
 
@@ -17,12 +18,13 @@ define(['tpl!templates/imageView.tpl', 'config', 'path', 'Radio'], function(imag
             return {
                 'class': function(){
                     var classes = ['imageView'];
-                    if(This.model.get('locked'))
+                    if(This.model.get('locked')){
                         classes.push('locked');
+                    }
 
                     return classes.join(' ');
                 }
-            }
+            };
         },
 
         templateHelpers: function () {
@@ -32,7 +34,7 @@ define(['tpl!templates/imageView.tpl', 'config', 'path', 'Radio'], function(imag
                 height: this.model.get('height'),
                 width: this.model.get('width'),
                 name: this.model.get('name')
-            }
+            };
         },
 
         ui: {
@@ -54,7 +56,7 @@ define(['tpl!templates/imageView.tpl', 'config', 'path', 'Radio'], function(imag
         attributes: function(){
             return {
                 class: 'inner'
-            }
+            };
         }
     });
 
