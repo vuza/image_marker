@@ -74,7 +74,7 @@ Install stuff ...
 
 ## Deployment
 ### Dependencies
-- Webservice for serving static files, nginx is recommended. It has to point to this repository's public folder
+- Webservice for serving static files, nginx is recommended. The subdomain "im.{{ target }}" has to point to this repository's public folder, e.g. "im.alagoda.at"
 - Node.js 5.x
 - cmake, boost, eigen3 and openCV, see ["C++ image processor/How to build the program"](#how-to-build-the-program)
 - A user named "deploy" with write access to /var/node has to exist on webserver
