@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: "{{ target }}"
   vars_files:
     - vars/all.yml
   remote_user: "{{ remote_user }}"
