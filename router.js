@@ -14,6 +14,6 @@ router.post('/image/:name/mark/:superpixelsize/:compactness/:thr_col_val/:x/:y/:
 router.post('/image/:name/reloadContours/:superpixelsize/:compactness/:thr_col_val', imageController.reloadContours);
 
 // Get all images and set lock to :lock
-router.get('/images/:lock', imageController.getImages);
+router.get('/images', imageController.getImages);
 
 module.exports = router;

@@ -5,7 +5,7 @@ define(['backbone', 'models/Image', 'config', 'underscore', 'controllers/ErrorCo
         urlRoot: config.api + '/images',
 
         url: function(){
-            return this.urlRoot + '/false'; // False because we do not want the images to be locked
+            return this.urlRoot;
         },
 
         err: function (err) {
