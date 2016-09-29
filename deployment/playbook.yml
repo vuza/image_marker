@@ -34,19 +34,19 @@
     replace:
       dest={{ root }}/public/scripts/config.js
       regexp="api:(.*)"
-      replace="api:'http://alagoda.at:3991/api/v1',"
+      replace="api:'http://{{ target }}:3991/api/v1',"
 
   - name: replace frontend config (2)
     replace:
       dest={{ root }}/public/scripts/config.js
       regexp="socket:(.*)"
-      replace="socket:'http://alagoda.at:3000',"
+      replace="socket:'http://{{ target }}:3000',"
 
   - name: replace frontend config (3)
     replace:
       dest={{ root }}/config.js
       regexp="publicDomain:(.*)"
-      replace="publicDomain:'http://im.alagoda.at',"
+      replace="publicDomain:'http://im.{{ target }}',"
 
   - name: Stop Node.js app
     command: forever stop {{ root }}/server.js
