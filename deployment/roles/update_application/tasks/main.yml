@@ -9,6 +9,7 @@
 
 - name: Install npm
   become: True
+  ignore_errors: yes #workaround for old installations
   apt: name=npm update_cache=yes
 
 - name: Install bower
