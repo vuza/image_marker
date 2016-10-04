@@ -75,19 +75,20 @@ Install stuff ...
 ## Deployment
 ### Dependencies
 - Webservice for serving static files, nginx is recommended. The subdomain "im.{{ target }}" has to point to this repository's public folder, e.g. "im.alagoda.at"
-- Node.js 5.x
 - cmake, boost, eigen3 and openCV, see ["C++ image processor/How to build the program"](#how-to-build-the-program)
-- A user named "deploy" with write access to /var/node has to exist on webserver
 - See config at deploy/vars/all.yml!
 - Add webserver address to hosts file
 
 ### ansible
 App can be deployed through ansible, run:
 ```
-ansible-playbook deployment/playbook.yml -u <your-user> --extra-vars "target=<your.webserver.com>"
+ansible-playbook deployment/playbook.yml -u <your-user> --extra-vars "target=<your.webserver.com> remote_user=<remote_user>" --ask-sudo --ask-pass --ask-sudo
 ```
-You can omit the -u parameter if your local user is equal to remote user at <your.webserver.com>, ansible will always ask you for sudo and ssh password.
-The script installs the app at <your.webserver.com>, you will need to config a webserver to serve the static files by your self
+You can omit the -u parameter if your local user is equal to remote user at <your.webserver.com>.
+You can omit --ask-pass if your public ssh key is deployed on target machine.
+You can omit --ask-sudo if sudo password is not asked for remote_user on target machine.
+You can omit remote_user if you want to use default, which is "deploy".
+The script installs the app at <your.webserver.com>:/var/node/image_marker, you will need to config a webserver to serve the static files by your self
 
 ### Nginx Setup
 We use ngnix for serving static frontend files. Make sure html push-state URLs work properly. Example nginx setup:
