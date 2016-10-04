@@ -37,16 +37,18 @@ define(['tpl!templates/markerView.tpl', 'Marionette', 'd3', 'randomcolor', 'path
             var $image = $(this.ui.image);
             var imageOffset = $image.offset();
             var absoluteClickPosition = {x: event.clientX, y: event.clientY};
+            var scrollTop = $(window).scrollTop();
+            var scrollLeft = $(window).scrollLeft();
             var relativeClickPosition = {
-                x: absoluteClickPosition.x - imageOffset.left,
-                y: absoluteClickPosition.y - imageOffset.top
+                x: absoluteClickPosition.x - imageOffset.left + scrollLeft,
+                y: absoluteClickPosition.y - imageOffset.top + scrollTop
             };
 
             // Request labeling parameter
             var superpixelsize = settingsChannel.request('superpixelsize');
             var compactness = settingsChannel.request('compactness');
             var thr_col_val = settingsChannel.request('thr_col_val');
-            var label = settingsChannel.request('label');
+            var label = settingsChannel.request('label')
 
             // Lock view and show loading
             notificationChannel.trigger('loading:show');
