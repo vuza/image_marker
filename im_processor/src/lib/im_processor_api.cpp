@@ -20,6 +20,13 @@ std::string Im_processor_api::getImageMatrix(std::string imgPath, int superpixel
     return createImgMatrix();
 }
 
+std::string Im_processor_api::getImageMatrixCompressed(std::string imgPath, int superpixelsize, double compactness, int thr_col_val)
+{
+    init();
+    loadImage(imgPath, superpixelsize, compactness, thr_col_val);
+    return createImgMatrixCompressed();
+}
+
 std::string Im_processor_api::fillSegment(std::string imgPath, int x, int y, int label, int superpixelsize, double compactness, int thr_col_val)
 {
     init();
@@ -154,12 +161,14 @@ void Im_processor_api::loadImage(string imgPath)
     labelImgPath += "/labels/";
     image_labels_colored_path = labelImgPath;
     image_labels_contours_path = labelImgPath;
+    image_labels_colored_contour_path = labelImgPath;
 
     labelImgPath += "label." + imgNumber + "." + image_labels_ext;
     image_labels_path = labelImgPath;
 
     image_labels_colored_path += "label_colored." + imgNumber + "." + image_labels_colored_ext;
     image_labels_contours_path += "label_contours." + imgNumber + "." + image_labels_contours_ext;
+    image_labels_colored_contour_path += "label_colored_contours." + imgNumber + "." + image_labels_contours_ext;
 
     image = cv::imread(imgPath, CV_LOAD_IMAGE_COLOR);
     image_labels = cv::imread(image_labels_path, CV_LOAD_IMAGE_GRAYSCALE);
@@ -211,6 +220,30 @@ std::string Im_processor_api::createImgMatrix()
     result = result.substr(0, result.length()-1); //remove last ","
     result += string("]");
     result += string("}");
+
+    return result;
+}
+
+std::string Im_processor_api::createImgMatrixCompressed()
+{
+    string result = "";
+
+    result += "{\"" + image_path + "\",";
+    result += std::to_string(image.rows) + ",";
+    result += std::to_string(image.cols) + ",";
+
+    for(int x = 0; x < image.rows; x++)
+    {
+        for(int y = 0; y < image.cols; y++)
+        {
+            //calculate label from greyColor
+            int label = jvis::getLabel(image_labels(y,x));
+            result+= std::to_string(label) + ",";
+
+            result+= "false,"; //TODO check if true or false
+        }
+    }
+    result = result.substr(0, result.length()-1); //remove last ","
 
     return result;
 }

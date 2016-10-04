@@ -34,6 +34,16 @@ public:
     std::string getImageMatrix(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
 
     /**
+    * returns a Matrix including Meta information for each Pixel of the image
+    * @param imgPath path to image
+    * @param superpixelsize - size of a superpixel
+    * @param compactness of superpixel (more compact - less neighbours)
+    * @param thr_col_val - similarity threshold
+    * @return imgMatrix in JSON format
+    */
+    std::string getImageMatrixCompressed(std::string imgPath, int superpixelsize, double compactness, int thr_col_val);
+
+    /**
      * fills the segment around the x and y coordinate with the given label
      * @param imgPath path to image
      * @param label the label to fill the segment with
@@ -99,6 +109,13 @@ private:
     std::string createImgMatrix();
 
     /**
+     * creates the image matrix in own format
+     * Precondition: init() and loadImage() methods executed before
+     * @return imgMatrix in JSON format
+     */
+    std::string createImgMatrixCompressed();
+
+    /**
      * saves the loaded image, its label file and the colored label file to directory
      * @return true if successfully saved
      */
@@ -135,6 +152,7 @@ private:
     string image_labels_path;
     string image_labels_colored_path;
     string image_labels_contours_path;
+    string image_labels_colored_contour_path;
     string image_labels_ext = "png";
     string image_labels_colored_ext = "png";
     string image_labels_contours_ext = "png";
