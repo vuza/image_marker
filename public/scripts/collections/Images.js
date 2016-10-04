@@ -9,7 +9,7 @@ define(['backbone', 'models/Image', 'config', 'underscore', 'controllers/ErrorCo
         },
 
         err: function (err) {
-            errorController.show('An error occurred: ' + JSON.stringify(err)); //TODO proper error handling
+            errorController.show('An error occurred: ' + JSON.stringify(err));
         },
 
         parse: function(data){
