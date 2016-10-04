@@ -1,0 +1,75 @@
+---
+- name: Install node.js
+  become: True
+  apt: name=nodejs update_cache=yes
+
+- name: Link node to nodejs
+  become: True
+  file: src=/usr/bin/nodejs dest=/usr/bin/node state=link
+
+- name: Install npm
+  become: True
+  apt: name=npm update_cache=yes
+
+- name: Install bower
+  become: True
+  npm: name=bower global=yes
+
+- name: Install bower
+  become: True
+  npm: name=forever global=yes
+
+- name: Install git
+  become: True
+  apt: name=git update_cache=yes
+
+- name: Create directory for app
+  become: True
+  file: path={{ root }} state=directory owner={{ remote_user }} group=www-data
+
+- name: Create logging directory
+  become: True
+  file: path={{ loggingLocation }} state=directory owner={{ remote_user }}
+
+- name: checkout repo
+  become: True
+  git: repo={{ git }} dest={{ root }} force=yes accept_hostkey=True version={{ gitVersion }}
+
+- name: install backend/npm dependencies
+  npm: path={{ root }}
+
+- name: remove current im_processor build if existing
+  file: path={{ root }}/im_processor/build state=absent
+
+- name: install im_processor
+  shell: npm run install
+  args:
+    chdir: "{{ root }}/im_processor"
+
+- name: install frontend/bower dependencies
+  bower: path={{ root }}
+
+- name: replace frontend config (1)
+  replace:
+    dest={{ root }}/public/scripts/config.js
+    regexp="api:(.*)"
+    replace="api:'http://{{ target }}:3991/api/v1',"
+
+- name: replace frontend config (2)
+  replace:
+    dest={{ root }}/public/scripts/config.js
+    regexp="socket:(.*)"
+    replace="socket:'http://{{ target }}:3000',"
+
+- name: replace frontend config (3)
+  replace:
+    dest={{ root }}/config.js
+    regexp="publicDomain:(.*)"
+    replace="publicDomain:'http://im.{{ target }}',"
+
+- name: Stop Node.js app
+  command: forever stop {{ root }}/server.js
+  ignore_errors: yes # Says it did not work, but it works!
+
+- name: Start Node.js app
+  command: forever start -al {{ loggingLocation }}/forever.log {{ root }}/server.js

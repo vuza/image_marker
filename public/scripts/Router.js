@@ -41,9 +41,6 @@ define(['Marionette'], function (Marionette) {
 
                 // Load images and render to layout
                 overviewController.showAllImages(imagesOverviewLayout.getRegion('overview'));
-
-                // Load navigation
-                //TODO
             });
         },
 
