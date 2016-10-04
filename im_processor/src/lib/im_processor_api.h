@@ -1,5 +1,5 @@
 //
-// Created by andreas on 09.01.16.
+// Created by Andreas Wittmann on 09.01.16.
 //
 
 #ifndef IMAGELABELLING_IM_PROCESSOR_API_H

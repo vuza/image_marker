@@ -1,5 +1,5 @@
 //
-// Created by andreas on 09.01.16.
+// Created by Andreas Wittmann on 09.01.16.
 //
 
 #include <opencv2/highgui/highgui_c.h>
@@ -219,7 +219,7 @@ bool Im_processor_api::saveImg()
 {
     cv::imwrite(image_labels_path, image_labels);
     createColoredLabelImg();
-    return true; //TODO check if imwrite was succesful.
+    return true;
 }
 
 bool Im_processor_api::createColoredLabelImg()
